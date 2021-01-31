@@ -1,0 +1,221 @@
+# -*- coding: utf-8 -*-
+import datetime
+@auth.requires_login()
+def index():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa = db.empresa(usuario.empresa)
+    paginacao = 10
+    if len(request.args) == 0:
+        pagina = 1
+    else:
+        try:
+            pagina = int(request.args[0])
+        except ValueError:
+            redirect(URL('erro', vars={
+                  'msg':'Numero da página inválido'
+                  }))
+    if pagina <= 0:
+        redirect(URL(args=1))
+    total = db(db.contrato_aluguel.empresa==empresa.id).count()
+    paginas = total/paginacao
+    if (total%paginacao)or(paginas<1):
+        paginas+=1
+    if total==0:
+        paginas=1
+    if pagina > paginas:
+        redirect(URL(args=[paginas]))
+    limites = (paginacao*(pagina-1), (paginacao*pagina))
+    registros = db(db.contrato_aluguel.empresa==empresa.id).select(
+      limitby=limites,orderby=~db.contrato_aluguel.id
+      )
+    consul=(request.args(1))
+    if (consul):
+        registros = db((db.contrato_aluguel.empresa==empresa.id)&(db.contrato_aluguel.status.contains(consul))).select(limitby=(0,paginacao))
+    return dict(rows=registros, pagina=pagina, paginas=paginas, total=total, empresa=empresa, usuario=usuario)
+
+@auth.requires_login()
+def acessar():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    limites = (0, 120)
+    rows = db(db.recebimento_contrato.contrato==contrato.id).select(
+      limitby=limites,orderby=db.recebimento_contrato.data_vencimento)
+    return locals()
+
+@auth.requires_login()
+def alterar():
+    response.view = 'generic.html' # use a generic view
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    if usuario.empresa!=contrato.empresa:
+        redirect(URL('default','index'))
+    #contrato.empresa=usuario.empresa
+    #contrato.update_record()
+    
+    total_parcelas = db((db.recebimento_contrato.contrato==contrato.id)).count()
+    if total_parcelas>0:
+        db.contrato_aluguel.valor_original.writable=False
+        db.contrato_aluguel.virgencia_meses.writable=False
+        db.contrato_aluguel.data_inicial.writable=False
+        db.contrato_aluguel.data_contrato.writable=False
+        db.contrato_aluguel.valor_caucao.readable=True
+        db.contrato_aluguel.valor_reajuste.writable=True
+        db.contrato_aluguel.locatario.readable=True
+        db.contrato_aluguel.locatario.writable=True
+        
+    request.function='Alterar Contrato'
+    db.contrato_aluguel.id.writable=False
+    db.contrato_aluguel.id.readable=False
+    db.contrato_aluguel.locatario.writable=False
+    db.contrato_aluguel.imovel.writable=False
+    db.contrato_aluguel.locatario.readable=True
+    db.contrato_aluguel.fiador.readable=True
+    #db.contrato_aluguel.imovel.requires = IS_IN_DB(db((db.imovel.empresa == usuario.empresa)&(db.imovel.status=='Disponivel')), 'imovel.id', '%(subtipo)s %(lougradouro)s  %(numero)s')
+    if contrato.fiador:
+        db.contrato_aluguel.fiador.writable=True
+        db.contrato_aluguel.fiador.requires = IS_IN_DB(db((db.pessoa.empresa == usuario.empresa)&(db.pessoa.id!=contrato.locatario)), 'pessoa.id', '%(razaosocial_nome)s')
+    #db.contrato_aluguel.empresa.writable=True
+    #db.contrato_aluguel.empresa.readable=True
+    form = SQLFORM(db.contrato_aluguel, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Dados atualizados'
+        redirect(URL('atualizar_status_imoveis',args=contrato.id))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+
+@auth.requires_login()
+def atualizar_status_imoveis():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    rows = db(db.imovel.empresa==usuario.empresa).select()
+    for row in rows:
+        total_contatos = db((db.contrato_aluguel.imovel==row.id)&(db.contrato_aluguel.status=="Ativo")).count()
+        if total_contatos>0:
+            row.status="Ocupado"
+        else:
+            row.status="Disponivel"
+        row.update_record()
+    redirect(URL('acessar',args=contrato.id))
+    return locals()
+
+@auth.requires_login()
+def gerar_parcelas():
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    recebimentos = db(db.recebimento_contrato.contrato == contrato.id).count()
+    if (recebimentos)>1:
+        db(db.recebimento_contrato.contrato == contrato.id).delete()
+        redirect(URL('acessar',args=request.args(0, cast=int)))
+    else:
+        #converte a data final para poder comparar e alterar
+        datafinal=datetime.date(contrato.data_inicial.year, contrato.data_inicial.month, contrato.data_inicial.day)
+        #se o dia for maior que 30 coloca o dia 30 no mesmo mês pra não dar erro
+        if contrato.data_inicial.day>30:
+            contrato.data_inicial=datetime.date(contrato.data_inicial.year, contrato.data_inicial.month, 30)
+        #caso o mês seja janeiro volta um ano e o mês passa a ser dezembro
+        if contrato.data_inicial.month==1:
+            datafinal=datetime.date(contrato.data_inicial.year-1, 12, contrato.data_inicial.day)
+        #caso o mês seja março e o dia seja maior que 28 volta um mês e coloca o dia 28
+        elif contrato.data_inicial.month==3 and contrato.data_inicial.year>28:
+            datafinal=datetime.date(contrato.data_inicial.year, contrato.data_inicial.month-1, 28)
+        #caso não seja março com dia acima de 28 e não seja o mês de janeiro
+        #simplesmente volta um mês
+        else:
+            datafinal=datetime.date(contrato.data_inicial.year, contrato.data_inicial.month-1, contrato.data_inicial.day)
+        row=0
+        #pega o dia da data cadastrada, pra preservar caso seja fevereiro
+        dia=contrato.data_inicial.day
+        #laço que roda a quantidade de meses
+        while (row<contrato.virgencia_meses):
+            #caso o mês seja menor que 12
+            if datafinal.month<12:
+                #caso o mês seja janeiro ou dia meior que 28
+                if datafinal.month==1 and datafinal.day>28:
+                    #coloca o dia guardado no dia da data final
+                    dia=datafinal.day
+                    #forma 
+                    datafinal=datetime.date(datafinal.year, datafinal.month+1, 28)
+                elif datafinal.day>30:
+                    dia=30
+                    datafinal=datetime.date(datafinal.year, datafinal.month+1, 30)
+                else:
+                    datafinal=datetime.date(datafinal.year, datafinal.month+1, dia)
+            else:
+                if datafinal.day>30:
+                    dia=30
+                    datafinal=datetime.date(datafinal.year+1, 1, 30)
+                else:datafinal=datetime.date(datafinal.year+1, 1, datafinal.day)
+            
+            mes_montage=request.now.month
+            dia_montage=request.now.day
+            ano_montage=request.now.year
+            data_hoje=datetime.date(ano_montage, mes_montage, dia_montage)
+            if datafinal<data_hoje:
+                status="Atrasado"
+            else:
+                status="Aguardando"
+            db.recebimento_contrato.insert( imovel=contrato.imovel, contrato=contrato.id, cliente=contrato.locatario, empresa=contrato.empresa,  valor_original=contrato.valor_original,status=status, valor_recebido=contrato.valor_original, data_vencimento=datafinal, data_pagamento=datafinal)
+            row+=1
+        #contrato.dia_vencimento=(datafinal.day)
+        contrato.data_final=datafinal
+        contrato.valor_reajuste=contrato.valor_original
+        contrato.update_record()
+    return redirect(URL('acessar',args=request.args(0, cast=int)))
+
+
+@auth.requires_login()
+def contrato_locacao():
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    return locals()
+
+
+@auth.requires_login()
+def reajustar_parcelas():
+    contrato = db.contrato_aluguel(request.args(0, cast=int)) 
+    rows = db((db.recebimento_contrato.contrato==contrato.id)&(db.recebimento_contrato.status=="Aguardando")).select()
+    for row in rows:
+        row.valor_original=contrato.valor_reajuste
+        row.update_record()
+    return redirect(URL('acessar',args=request.args(0, cast=int)))
+
+
+@auth.requires_login()
+def deletar_contrato():
+    response.view = 'generic.html' # use a generic view
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    cliente = db.pessoa(contrato.locatario.id)
+    if usuario.empresa!=contrato.empresa:
+        redirect(URL('default','index'))
+    db.contrato_aluguel.valor_original.writable=False
+    db.contrato_aluguel.virgencia_meses.writable=False
+    db.contrato_aluguel.data_inicial.writable=False
+    db.contrato_aluguel.data_contrato.writable=False
+    db.contrato_aluguel.valor_reajuste.writable=False
+    db.contrato_aluguel.locatario.writable=False
+    request.function='Será deletado Tudo Inclusive as Parcelas'
+    db.contrato_aluguel.id.writable=False
+    db.contrato_aluguel.id.readable=False
+    db.contrato_aluguel.locatario.writable=False
+    db.contrato_aluguel.imovel.writable=False
+    db.contrato_aluguel.locatario.writable=False
+    db.contrato_aluguel.local_contrato.writable=False
+    db.contrato_aluguel.tipo.writable=False
+    db.contrato_aluguel.fiador.writable=False
+    form = SQLFORM(db.contrato_aluguel, request.args(0, cast=int), deletable=True)
+    if form.process().accepted:
+        session.flash = 'Dados atualizados'
+        redirect(URL('acs_clientes','atualizar_status_imoveis',args=cliente.id))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+
+
+@auth.requires_login()
+def desocupar_imovel():
+    contrato = db.contrato_aluguel(request.args(0, cast=int))
+    contrato.status="Finalizado"
+    contrato.update_record()
+    rows = db((db.recebimento_contrato.contrato==contrato.id)&(db.recebimento_contrato.status.contains("Aguardando"))&(db.recebimento_contrato.valor_original<=0)).delete()
+    redirect(URL('acs_contratos','acessar',args=contrato.id))
+    return locals()

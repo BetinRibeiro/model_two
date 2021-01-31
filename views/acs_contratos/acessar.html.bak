@@ -1,0 +1,171 @@
+{{extend 'layout.html'}}
+{{debito=contrato.valor_total-contrato.valor_recebido}}
+<div class="py-3 text-center" >
+    <div class="container">
+        <div class="row  my-2 ">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary btn-block my-2" href="{{=URL('acs_clientes','acessar',args=contrato.locatario)}}">
+                <i class="fa fa-fw fa-list"></i> Acessar Cliente</a>
+              </div>
+            <div class="col-md-6">
+                <a class="btn btn-primary btn-block my-2" href="{{=URL('acs_imoveis','acessar',args=contrato.imovel)}}">
+                    <i class="fa fa-fw fa-list"></i> Acessar Imóvel</a>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary btn-block my-2" href="{{=URL('acs_contratos','index')}}">
+                    <i class="fa fa-fw fa-list"></i> Acessar Contratos</a>
+              </div>
+            <div class="col-md-6">
+          {{if usuario.tipo!="Usuario":}}
+                {{if contrato.status!="Finalizado":}}
+            {{if  ((debito>0)or(contrato.valor_recebido>0)):}}
+                  <a class="btn btn-danger btn-block my-2 disabled" href="{{=URL('acs_contratos','deletar_contrato',args=contrato.id)}}">
+                    <i class="fa fa-fw fa-trash"></i> Deletar Contrato</a>
+                {{else:}}
+                <a class="btn btn-danger btn-block my-2 " href="{{=URL('acs_contratos','deletar_contrato',args=contrato.id)}}">
+                    <i class="fa fa-fw fa-trash"></i> Deletar Contrato</a>
+              
+                {{pass}}
+                {{pass}}
+                {{pass}}
+                </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h2 class="mb-3">{{=contrato.virgencia_meses}} Meses</h2>
+          <p class="lead">Locatario : {{=contrato.locatario.razaosocial_nome}}</p>
+            {{if contrato.fiador:}}
+          <p class="lead">Fiador : {{=contrato.fiador.razaosocial_nome}}</p>
+            {{else:}}
+          <p class="lead">Caução : R$ {{="{:,}".format(round(contrato.valor_caucao,1)).replace(",",".")}}0</p>
+            {{pass}}
+          <p class="lead">Imovel : {{=contrato.imovel.lougradouro}} {{=contrato.imovel.numero}}</p>
+          <p class="lead">Valor Total : R$ {{="{:,}".format(round(contrato.valor_total,1)).replace(",",".")}}0</p>
+          <p class="lead">Valor Recebido : R$ {{="{:,}".format(round(contrato.valor_recebido,1)).replace(",",".")}}0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="">
+    <div class="container">
+                {{if contrato.status!="Finalizado":}}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2" href="{{=URL('acs_contratos','alterar',args=contrato.id)}}"><i class="fa fa-fw fa-pencil"></i>&nbsp;Alterar Contrato</a></div>
+              {{if len(rows)>0:}}
+              {{if contrato.valor_reajuste>0:}}
+              <div class="col-md-6"><a class="btn btn-primary btn-block my-2 " href="{{=URL('acs_contratos','reajustar_parcelas',args=contrato.id)}}"><i class="fa fa-fw fa-gear"></i>&nbsp;Reajustar Parcelas</a></div>
+              {{else:}}
+            <div class="col-md-6"><a class="btn btn-danger btn-block my-2 " href="{{=URL('acs_contratos','reajustar_parcelas',args=contrato.id)}}"><i class="fa fa-fw fa-gear"></i>&nbsp;Zerar a divida</a></div>
+            {{pass}}
+              {{pass}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+              {{if not len(rows)>0:}}
+            
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2 " href="{{=URL('acs_contratos','gerar_parcelas',args=contrato.id)}}"><i class="fa fa-fw fa-list"></i>&nbsp;Gerar Parcelas</a></div>
+          </div>
+            {{else:}}
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2  disabled" href="{{=URL('acs_contratos','todos_recibos',args=contrato.id)}}"><i class="fa fa-download fa-fw"></i>&nbsp;Parcelas Geradas</a></div>
+            
+            {{if (debito)>0:}}
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2" href="{{=URL('acs_contratos','contrato_locacao',args=contrato.id)}}"><i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;Imprimir contrato</a></div>
+            {{else:}}
+            <div class="col-md-6"><a class="btn btn-success btn-block my-2" href="{{=URL('acs_contratos','desocupar_imovel',args=contrato.id)}}"><i class="fa fa-fw fa-reload"></i> Desocupar Imóvel</a></div>
+            {{pass}}
+          </div>
+            {{pass}}
+        </div>
+      </div>
+      
+          {{pass}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless  table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Valor</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" id="noprint">Acessar</th>
+                  <th scope="col" id="noprint">Recibo</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{total_recebido=0}}
+                  {{total_aguardando=0}}
+                  {{for row in rows:}}
+                <tr>
+                    {{valor_recebido=row.valor_original}}
+                    {{if (row.finalizado==True)and(row.status!="Quitado"):}}
+                    {{if row.valor_recebido>0:}}
+                    {{valor_recebido=row.valor_recebido}}
+                    {{row.status="Quitado"}}
+                    {{row.update_record()}}
+                    {{pass}}
+                    {{pass}}
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_vencimento.day,row.data_vencimento.month,row.data_vencimento.year))}}</th>
+                    
+                  <td>R$ {{="{:,}".format(round(valor_recebido,1)).replace(",",".")}}0</td>
+                  <td>{{=row.status}}</td>
+                  <td id="noprint">
+                      <a class="btn  my-2" href="{{=URL('acs_recebimentos','alterar_recibo',args=row.id)}}">
+                          <i class="fa fa-pencil fa-fw fa-1x py-1"></i>
+                      </a>
+                    </td>
+                  <td id="noprint">
+                      <a class="btn  my-2 disabled" href="{{=URL('acs_recebimentos','recibo',args=row.id)}}">
+                          <i class="fa fa-file-pdf-o fa-fw fa-1x py-1 text-danger"></i>
+                      </a>
+                    </td>
+                </tr>
+                  
+                  {{if row.status=='Aguardando':}}
+                  {{total_aguardando+=row.valor_original}}
+                  {{elif row.status=='Quitado':}}
+                  {{total_recebido+=valor_recebido}}
+                  
+                  {{pass}}
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="py-3 text-center" >
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6 p-4"> <i class="d-block fa fa-circle fa-3x mb-2 text-muted"></i>
+          <h4>Valor Recebido</h4>
+          <p>R$ {{="{:,}".format(round(total_recebido,1)).replace(",",".")}}0</p>
+        </div>
+        <div class="col-lg-5 col-md-6 p-4"> <i class="d-block fa fa-circle-o fa-3x mb-2 text-muted"></i>
+          <h4> <b>Valor Aguardando</b></h4>
+          <p>R$ {{="{:,}".format(round(total_aguardando,1)).replace(",",".")}}0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{{total=total_recebido+total_aguardando}}
+{{if (contrato.valor_total!=total)or(contrato.valor_recebido!=total_recebido):}}
+{{contrato.valor_total=total}}
+{{contrato.valor_recebido=total_recebido}}
+{{contrato.update_record()}}
+{{redirect(URL(args=contrato.id))}}
+{{pass}}

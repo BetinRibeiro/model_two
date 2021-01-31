@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+# tente algo como
+def index(): return dict(message="hello from acs_recebimentos.py")
+
+@auth.requires_login()
+def alterar_recibo():
+    response.view = 'generic.html' # use a generic view
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    recebimento_contrato = db.recebimento_contrato(request.args(0, cast=int))
+    if usuario.empresa!=recebimento_contrato.empresa:
+        redirect(URL('default','index'))
+    request.function=('Firmar Recebimento')
+    db.recebimento_contrato.id.writable=False
+    db.recebimento_contrato.id.readable=False
+    db.recebimento_contrato.data_vencimento.readable=True
+    db.recebimento_contrato.tipo.writable=True
+    db.recebimento_contrato.finalizado.writable=True
+    db.recebimento_contrato.valor_original.readable=True
+    db.recebimento_contrato.valor_recebido.writable=True
+    db.recebimento_contrato.valor_recebido.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.default=request.now
+    form = SQLFORM(db.recebimento_contrato, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Dados atualizados'
+        redirect(URL('acs_contratos','acessar',args=recebimento_contrato.contrato_aluguel))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)

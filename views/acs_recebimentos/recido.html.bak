@@ -1,0 +1,339 @@
+{{extend 'layout.html'}}
+{{from datetime import *}}
+{{import datetime}}
+{{data=request.now}}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron&amp;display=swap" rel="stylesheet">
+  <style type="text/css">
+    body {
+      font-size: 20px;
+    }
+  </style>
+{{a=1}}
+<div class="py-1">
+         
+    <div class="container">
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2" href="{{=URL('acs_recebimentos','index')}}">Recebimentos do Mês</a>
+                <a class="btn btn-success text-white my-2" onClick="window.print()">
+                    <i class="fa fa-fw fa-print" ></i>
+                    Imprimir Recibo
+                </a>
+            </div>
+            </div>
+            </div>
+  {{while not a>2:}}
+  {{a+=1}}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 border" style="font-family: Roboto">
+          <br>
+            <center>
+          <h4>RECIBO DE ALUGUEL {{=(contrato.tipo).upper()}}</h4>
+                </center>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive table-sm">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td><B>Locador</B></td>
+                      <td><B>{{=contrato.empresa.razaosocial}}</B></td>
+                    </tr>
+                    <tr>
+                        {{cnpj=contrato.empresa.cnpj}}
+                        {{cnpj=cnpj.replace(".","").replace("-","").replace("/","")}}
+                {{if len(cnpj)>11:}}
+                {{cnpj=""+(cnpj)[0:2]+"."+(cnpj)[2:5]+"."+(cnpj)[5:8]+"/"+(cnpj)[8:12]+"-"+(cnpj)[12:14]}}
+                {{else:}}
+                {{cnpj=""+(cnpj)[0:3]+"."+(cnpj)[3:6]+"."+(cnpj)[6:9]+"-"+(cnpj)[9:11]}}
+                        {{pass}}
+                      <td>CPF/CNPJ</td>
+                      <td>{{=cnpj}}</td>
+                       
+                    </tr>
+                    <tr>
+                {{contrato.empresa.telefone=(contrato.empresa.telefone).replace("(", "").replace(")", "").replace("-", "")}}
+                {{contrato.empresa.telefone="("+(contrato.empresa.telefone)[0:2]+")"+(contrato.empresa.telefone)[2:6]+"-"+(contrato.empresa.telefone)[6:11]}}
+                        {{contrato.empresa.celular=(contrato.empresa.celular).replace("(", "").replace(")", "").replace("-", "")}}
+                {{contrato.empresa.celular="("+(contrato.empresa.celular)[0:2]+")"+(contrato.empresa.celular)[2:6]+"-"+(contrato.empresa.celular)[6:11]}}
+                      <td>Telefone</td>
+                      <td>{{=contrato.empresa.telefone}} | {{=contrato.empresa.celular}}</td>
+                    </tr>
+                    <tr></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              
+              <div class="table-responsive table-sm">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td><b>Locatário</b></td>
+                      <td><b>{{=contrato.locatario.razaosocial_nome}}</b></td>
+                    </tr>
+                    <tr>
+                       {{cnpj=contrato.locatario.cpf}}
+                        {{cnpj=cnpj.replace(".","").replace("-","").replace("/","")}}
+                {{if len(cnpj)>11:}}
+                {{cnpj=""+(cnpj)[0:2]+"."+(cnpj)[2:5]+"."+(cnpj)[5:8]+"/"+(cnpj)[8:12]+"-"+(cnpj)[12:14]}}
+                {{else:}}
+                {{cnpj=""+(cnpj)[0:3]+"."+(cnpj)[3:6]+"."+(cnpj)[6:9]+"-"+(cnpj)[9:11]}}
+                        {{pass}}
+                      <td>CPF/CNPJ</td>
+                      <td>{{=cnpj}}</td>
+                       
+                    </tr>
+                    <tr>
+                      <td>Endereço do Imóvel</td>
+                      <td>{{=contrato.imovel.lougradouro}} Nº {{=contrato.imovel.numero}}</td>
+                    </tr>
+                    <tr>
+                      <td>Cidade</td>
+                      <td>{{=contrato.imovel.cidade}} {{=contrato.imovel.uf}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+                <p><B>LOCADOR RECEBE A QUANTIA DE - R$ {{="{:,}".format(round(contrato.valor_original,1)).replace(",",".")}}0 ( <b id="teste"></b><script>Extenso({{=contrato.valor_original}})</script>) DO LOCATÁRIO</B></p>
+              <hr>
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="table-responsive table-sm">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Data</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Aluguel referente</th>
+                          <td>{{=("{}/{}".format(recebimento.data_vencimento.day,recebimento.data_vencimento.month))}} à {{ano=recebimento.data_vencimento.year}}
+                            {{mes=recebimento.data_vencimento.month}}
+                            {{if recebimento.data_vencimento.month>=12:}}
+                            {{mes=1}}
+                            {{ano+=1}}
+                            {{else:}}
+                            {{mes+=+1}}
+                            {{pass}}
+                            {{=("{}/{}/{}".format(recebimento.data_vencimento.day,mes,ano))}}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Data do vencimento</th>
+                          <td>{{=("{}/{}/{}".format(recebimento.data_vencimento.day,recebimento.data_vencimento.month,recebimento.data_vencimento.year))}}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Término do Contrato</th>
+                          <td>{{=("{}/{}/{}".format(contrato.data_final.day,contrato.data_final.month,contrato.data_final.year))}}</td>
+                        </tr>
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                  
+                <div class="col-md-7">
+                  <div class="col-md-12">
+                    <div class="table-responsive table-sm">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Descrição</th>
+                            <th>Valor</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Aluguel</td>
+                            <td>R$ {{="{:,}".format(round(recebimento.valor_original,1)).replace(",",".")}}0</td>
+                          </tr>
+                          <tr>
+                             
+                            <td>#</td>
+                            <td >R$ {{="{:,}".format(round(0,1)).replace(",",".")}}0</td>
+                              
+                          </tr>
+                          <tr>
+                            <td>Valor Recebido</td>
+                            <td>R$ {{="{:,}".format(round(recebimento.valor_recebido,1)).replace(",",".")}}0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <br>
+                  <center>
+                    <div class="blockquote">
+                      <p class="mb-0">___________________________________</p>
+                      <div class="blockquote-footer">Assinatura do Locador</div>
+                    </div>
+                  </center>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{pass}}
+
+<script type="text/javascript">
+    window.onload = Extenso({{=contrato.valor_original}});
+    function Extenso(vlr){
+
+    var Num=parseFloat(vlr);
+    if (vlr == 0)
+    {
+    {document.getElementById('teste').innerHTML = extenso;}
+}else{
+
+    var inteiro = parseInt(vlr);; // parte inteira do valor
+    if(inteiro<1000000000000000)
+    {
+
+    var resto = Num.toFixed(2) - inteiro.toFixed(2);       // parte fracionária do valor
+    resto=resto.toFixed(2)
+    var vlrS =  inteiro.toString();    
+
+    var cont=vlrS.length;
+    var extenso="";
+    var auxnumero;
+    var auxnumero2;
+    var auxnumero3;
+
+    var unidade =["", "um", "dois", "três", "quatro", "cinco",
+    "seis", "sete", "oito", "nove", "dez", "onze",
+    "doze", "treze", "quatorze", "quinze", "dezesseis",
+    "dezessete", "dezoito", "dezenove"];
+
+var centena = ["", "cento", "duzentos", "trezentos",
+    "quatrocentos", "quinhentos", "seiscentos",
+    "setecentos", "oitocentos", "novecentos"];
+
+var dezena = ["", "", "vinte", "trinta", "quarenta", "cinquenta",
+    "sessenta", "setenta", "oitenta", "noventa"];
+
+var qualificaS = ["reais", "mil", "milhão", "bilhão", "trilhão"];
+var qualificaP = ["reais", "mil", "milhões", "bilhões", "trilhões"];
+
+for (var i=cont;i > 0;i--)
+{   
+    var verifica1="";
+    var verifica2=0;
+    var verifica3=0;
+    auxnumero2="";
+    auxnumero3="";
+    auxnumero=0;
+    auxnumero2 = vlrS.substr(cont-i,1);    
+    auxnumero = parseInt(auxnumero2);
+
+
+    if((i==14)||(i==11)||(i==8)||(i==5)||(i==2))
+    {
+        auxnumero2 = vlrS.substr(cont-i,2);
+        auxnumero = parseInt(auxnumero2);
+    }
+
+    if((i==15)||(i==12)||(i==9)||(i==6)||(i==3))
+    {   
+        extenso=extenso+centena[auxnumero];
+        auxnumero2 = vlrS.substr(cont-i+1,1)
+        auxnumero3 = vlrS.substr(cont-i+2,1)
+
+        if((auxnumero2!="0")||(auxnumero3!="0"))
+        extenso+=" e ";
+
+    }else
+
+    if(auxnumero>19){
+        auxnumero2 = vlrS.substr(cont-i,1);
+        auxnumero = parseInt(auxnumero2);
+        extenso=extenso+dezena[auxnumero];
+        auxnumero3 = vlrS.substr(cont-i+1,1)
+
+        if((auxnumero3!="0")&&(auxnumero2!="1"))
+        extenso+=" e ";
+    }
+        else if((auxnumero<=19)&&(auxnumero>9)&&((i==14)||(i==11)||(i==8)||(i==5)||(i==2)))
+        {
+            extenso=extenso+unidade[auxnumero];   
+        }else if((auxnumero<10)&&((i==13)||(i==10)||(i==7)||(i==4)||(i==1)))
+        {
+            auxnumero3 = vlrS.substr(cont-i-1,1);
+            if((auxnumero3!="1")&&(auxnumero3!=""))
+            extenso=extenso+unidade[auxnumero]; 
+        }
+
+        if(i%3==1)
+        {       
+            verifica3 = cont-i;
+            if(verifica3==0)
+            verifica1 = vlrS.substr(cont-i,1);
+
+            if(verifica3==1)
+            verifica1 = vlrS.substr(cont-i-1,2);
+
+            if(verifica3>1)
+            verifica1 = vlrS.substr(cont-i-2,3);
+
+         verifica2 = parseInt(verifica1);
+
+         if(i==13)
+         {
+            if(verifica2==1){
+            extenso=extenso+" "+qualificaS[4]+" ";
+        }else if(verifica2!=0){extenso=extenso+" "+qualificaP[4]+" ";}}
+            if(i==10)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[3]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[3]+" ";}}
+            if(i==7)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[2]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[2]+" ";}}
+            if(i==4)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[1]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[1]+" ";}}
+            if(i==1)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[0]+" ";
+            }else {extenso=extenso+" "+qualificaP[0]+" ";}}
+        }
+    }
+    resto = resto * 100;
+    var aexCent=0;
+    if(resto<=19&&resto>0)
+    extenso+=" e "+unidade[resto]+" Centavos";
+    if(resto>19)
+    {
+        aexCent=parseInt(resto/10);
+
+    extenso+=" e "+dezena[aexCent]
+    resto=resto-(aexCent*10);
+
+    if(resto!=0)
+    extenso+=" e "+unidade[resto]+" Centavos";
+    else extenso+=" Centavos";
+    }
+
+        {document.getElementById('teste').innerHTML = extenso.toUpperCase();}
+}
+else
+{document.getElementById('teste').value = "Numero maior que 999 trilhões";}
+}
+}
+    
+    window.onload = initPage;
+</script>

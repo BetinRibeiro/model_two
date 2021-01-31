@@ -1,0 +1,87 @@
+{{extend 'layout.html'}}
+<div class="py-5" >
+    <div class="container">
+        <div class="row  mb-2 text-center">
+            <div class="col-md-12">
+                <center>
+                    <h2 class="text-center">
+                    <i class="d-block fa fa-1x text-danger fa-file-text-o" ></i>
+                        Lista de Contratos
+                    </h2>
+                </center>
+            </div>
+        </div>
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2" href="{{=URL('acs_sistema','index')}}">
+                    <i class="fa fa-navicon fa-fw"></i>&nbsp;Inicio
+                </a>
+                <a class="btn btn-primary my-2" href="{{=URL('acs_clientes','index')}}">
+                    <i class="fa fa-user-plus fa-fw"></i>&nbsp;Cadastrar Contrato
+                </a>
+            </div>
+            <div class="form-group row m-2">
+                <form id="form">
+                    <ul class="list-inline text-right" >
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Ativo">Ativo</li>
+                        <li class="list-inline-item"><input type="radio" name="q1" value="Finalizado">Finalizado</li>
+                        <li class="list-inline-item"><button class="btn btn-primary"   id="btn-salvar" type="submit">Filtrar</button></li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+        <div class="row border">
+            {{for row in rows:}}
+            <div class="col-md-6">
+                <div class="card text-center m-1 border">
+                    <div class="card-header">
+                        <p>{{=row.locatario.razaosocial_nome}}</p>
+                    </div>
+                    <div class="card-body">
+                        <p>{{=row.imovel.bairro}}/{{=row.imovel.lougradouro}}/{{=row.imovel.numero}}</p>
+                        <p>{{=("{}/{}/{}".format(row.data_final.day,row.data_final.month,row.data_final.year))}}</p>
+                        <p>{{=row.status}}</p>
+                        <p>
+                            <a class="btn btn-primary" href="{{=URL('acs_contratos','acessar', args=row.id)}}">
+                                <i class="fa fa-download fa-fw"></i>&nbsp;Acessar </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{pass}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="Navegação de página exemplo">
+                    <ul class="pagination justify-content-end">
+                        {{ if pagina != 1: }}
+                            <li class="page-item">
+                                <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                                <i class="fa fa-fw fa-arrow-left"></i>
+                                Anterior&nbsp;</a>
+                            </li>
+                        {{ pass }}
+                        {{ if pagina != paginas: }}
+                        <li class="page-item">
+                            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                                Próximo&nbsp;
+                                <i class="fa fa-fw fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        {{ pass }}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var form = document.querySelector('#form');
+    var botao = document.querySelector('#btn-salvar');
+
+    botao.addEventListener('click', function (event) {
+        event.preventDefault();
+        window.location.href = "{{=URL('index')}}"+"/1/"+(form.q1.value);
+    });
+</script>

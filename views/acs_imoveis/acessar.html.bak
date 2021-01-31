@@ -1,0 +1,173 @@
+{{extend 'layout.html'}}
+{{row.cpf=row.cpf.replace(".","").replace("-","").replace("/","")}}
+                {{cpf = [int(char) for char in row.cpf if char.isdigit()]}}
+                {{for i in range(9, 11):}}
+                {{value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))}}
+                {{digit = ((value * 10) % 11) % 10}}
+                {{if digit != cpf[i]:}}
+                  {{aviso=False}}
+                      {{else:}}
+                
+                  {{aviso=True}}
+                    {{pass}} {{pass}}
+              {{if aviso==False:}}
+{{redirect(URL('index'))}}
+{{pass}}
+<div class="py-5" >
+    <div class="container">
+         <div class="row text-center">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Acesso ao Imóvel</h1>
+          <p class="lead">{{=imovel.lougradouro}} {{=imovel.numero}}</p>
+        </div>
+      </div>
+        <div class="row text-left">
+        <div class="col-md-6">
+        <div class="row " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary btn-block my-2" href="{{=URL('acs_imoveis','index')}}">
+                    <i class="fa fa-fw fa-bars"></i> 
+                    Todos os Imóveis
+                </a>
+            </div>
+            <div class="col-md-6">
+                    {{if imovel.conferido==False:}}
+                <a class="btn btn-primary btn-block my-2" href="{{=URL('acs_imoveis','alterar', args=imovel.id)}}">
+                    <i class="fa fa-fw fa-pencil"></i>
+                    Alterar dados Imóveis
+                </a>
+                {{pass}}
+            </div>
+        </div>
+        <ul class="list-group mt-2 border">
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0">
+                        <b>Classificação</b>
+                    </h6>
+                    <small>{{=imovel.subtipo}} {{=imovel.tipo}} </small>
+                </div>
+                <span class="text-muted">#</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0" style=""><b>Endereço</b></h6>
+                    <small>
+                        <a target="_blank" href="https://www.google.com/maps/place/+({{=imovel.lougradouro}},{{=imovel.numero}},{{=imovel.bairro}},{{=imovel.cidade}},{{=imovel.uf}})" class="text-muted">
+                            <i class="fa fa-fw fa-1x py-1 fa-map-marker "></i>
+                            {{=imovel.lougradouro}} {{=imovel.numero}}
+                        </a>
+                    </small>
+                </div>
+                <span class="text-muted">#</span>
+            </li>
+        {{if usuario.tipo!="Usuario":}}
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0" style=""><b>Cidade</b></h6>
+                    <small>{{=imovel.cidade}} {{=imovel.uf}}</small>
+                </div> 
+                <span class="text-muted">#</span>
+            </li>
+            {{pass}}
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0" style=""><b>CEP</b></h6> 
+                    <small >
+                        <i class="fa fa-fw fa-envelope-open"></i> 
+                        {{=imovel.bairro}} {{=imovel.cep}}
+                    </small>
+                </div> 
+                <span class="text-muted">#</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6" style="">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2 btn-block" href="{{=URL('acs_imoveis','despesas',args=imovel.id)}}">
+                    <i class="fa fa-fw fa-plus"></i> 
+                    Adicionar Despesa
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2 btn-block" href="{{=URL('acs_clientes','index')}}">
+                    <i class="fa fa-fw fa-plus"></i> 
+                    Adicionar Contrato
+                </a>
+        </div>
+    </div>
+    <ul class="list-group mt-2 border">
+        <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <h6 class="my-0" style="">
+                    <b>Contratos</b>
+                </h6>
+                <small class="text-muted">
+                    {{=total_contratos}} Contratos
+                </small>
+            </div>
+            <span class="text-muted" id="noprint">
+                <a class="btn btn-primary" href="{{=URL('acs_imoveis','contratos', args=imovel.id)}}">
+                    <i class="fa fa-fw fa-1x py-1 fa-sign-in"></i> 
+                    Acessar
+                </a>
+            </span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <h6 class="my-0" style="">
+                    <b>Recebimentos</b>
+                </h6>
+                <small class="text-muted">
+                    R$ {{="{:,}".format(round(imovel.valor_recebido,1)).replace(",",".")}}0 
+                </small>
+            </div>
+            <span class="text-muted" id="noprint">
+                <a class="btn btn-primary" href="{{=URL('acs_imoveis','recebimentos', args=imovel.id)}}">
+                    <i class="fa fa-fw fa-1x py-1 fa-sign-in"></i> 
+                    Acessar
+                </a>
+            </span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <h6 class="my-0" style="">
+                    <b>Despesas</b>
+                </h6>
+                <small class="text-muted">
+                    R$ {{="{:,}".format(round(imovel.valor_desp_total,1)).replace(",",".")}}0 
+                </small>
+            </div>
+            <span class="text-muted" id="noprint">
+                <a class="btn btn-primary"  href="{{=URL('acs_imoveis','despesas', args=imovel.id)}}">
+                    <i class="fa fa-fw fa-1x py-1 fa-sign-in"></i> 
+                    Acessar
+                </a>
+            </span>
+        </li>
+        {{if usuario.tipo!="Usuario":}}
+        <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <h6 class="my-0" style=""><b>Conferência</b></h6>
+                {{if imovel.conferido==False:}}
+                    <small class="text-muted">Alterações Liberadas</small>
+                {{else:}}
+                    <small class="text-muted">Alterações Bloqueadas</small>
+                {{pass}}
+            </div>
+            <span class="text-muted" id="noprint">
+                
+                    {{if imovel.conferido==False:}}
+                <a class="btn btn-success"  href="{{=URL('acs_imoveis','conferir', args=imovel.id)}}">
+                        <i class="fa fa-list fa-check-square-o fa-2x"></i>
+                    {{else:}}
+                    <a class="btn btn-danger"  href="{{=URL('acs_imoveis','conferir', args=imovel.id)}}">
+                        <i class="fa fa-list fa-ban fa-2x "></i>
+                    {{pass}}
+                </a>
+            </span>
+        </li>
+                    {{pass}}
+    </ul>
+</div>

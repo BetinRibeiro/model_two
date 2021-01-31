@@ -1,0 +1,114 @@
+{{extend 'layout.html'}}
+<div class="py-5" >
+    <div class="container">
+        <div class="row  mb-2 text-center">
+            <div class="col-md-12">
+            <center>
+            <h2 class="text-center">
+                <i class="d-block fa fa-1x text-success fa-user-o" ></i>
+                Lista de Usuarios
+            </h2>
+                </center>
+            </div>
+        </div>
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2" href="{{=URL('acs_sistema','index')}}">
+                    <i class="fa fa-navicon fa-fw"></i>&nbsp;Inicio
+                </a>
+                <a class="btn btn-primary my-2" href="{{=URL('cadastrar')}}">
+                    <i class="fa fa-user-plus fa-fw"></i>&nbsp;Cadastrar Usuarios
+                </a>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row m-2">
+                    <input type="text" class="form-control col-9 col-form-label ml-2" name="busca" placeholder="Pesquisa Nome" id="input"/>
+                    <div class="col-2">
+                        <button class="btn btn-primary botao " id="bt" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{if len(rows)==0:}}
+            <center>
+            <marquee>
+                Você não possui nem um Usuario Cadastrado
+            </marquee>
+                </center>
+            {{pass}}
+      <div class="row border">
+            
+            {{for row in rows:}}
+        <div class="col-md-6">
+          <div class="card text-center m-1 border">
+            <div class="card-header">
+              <h5 class="card-title">{{=row.nome}}</h5>
+            </div>
+            <div class="card-body">
+                
+              <h5 class="card-title">Acesso de {{=row.tipo}}</h5>
+                <p>
+                    Email - {{=row.usuario.email}}
+                    <p>
+                    Senha - *********
+                </p>
+              
+                </p>
+                
+                {{if row.tipo!="Proprietário":}}
+              <a href="{{=URL('alterar', args=row.id)}}" class="btn btn-primary">Alterar</a>
+                {{else:}}
+              <a href="{{=URL('alterar', args=row.id)}}" class="btn btn-primary">Alterar</a>
+                
+                {{pass}}
+            </div>
+          </div>
+        </div>
+               
+            {{pass}}
+      </div>
+<div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Navegação de página exemplo">
+  <ul class="pagination justify-content-end">
+        {{ if pagina != 1: }}
+        <li class="page-item">
+            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                <i class="fa fa-fw fa-arrow-left"></i>
+                Anterior&nbsp;</a>
+        </li>
+        {{ pass }}
+
+        {{ if pagina != paginas: }}
+        <li class="page-item">
+             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                Próximo&nbsp;
+                <i class="fa fa-fw fa-arrow-right"></i>
+            </a>
+        </li>
+        {{ pass }}
+    </ul>
+</nav>
+</div>
+</div>
+  </div>
+  </div>
+
+<script>
+    var inputElement = document.querySelector('input[name=busca]');
+    var btnElement = document.querySelector('button.botao');
+
+    btnElement.onclick = function(){
+     var busca= inputElement.value;
+        window.location.href = "{{=URL('index')}}"+"/1/"+busca
+
+    }
+    $(document).keypress(function(e) {
+    if(e.which == 13) {
+     var busca= inputElement.value;
+        window.location.href = "{{=URL('index')}}"+"/1/"+busca
+    }
+});
+</script>

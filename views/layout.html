@@ -33,6 +33,18 @@
     {{block head}}{{end}}
   </head>
   <body>
+      <style  type="text/css">
+    @media print{
+        .btn{
+             display: none;
+        }
+        
+        #noprint { display:none; } 
+      a:link{font:15px "verdana"; color:#8B4513; text-decoration:none;}
+
+a:hover{font:20px "verdana"; color:black; text-decoration:underline;}
+    }
+      </style>
     <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
     <!-- Navbar ======================================= -->
     <nav class="navbar navbar-light navbar-expand-md bg-faded bg-dark navbar-dark justify-content-center">
@@ -59,6 +71,7 @@
           {{pass}}
           {{pass}}
         </ul>
+       
         {{if 'auth' in globals():}}
         <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
           <li class="nav-item dropdown">
@@ -104,7 +117,8 @@
         <div class="col-md-12">
           <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
           <div id="poweredBy" class="pull-right">
-            <a href="#">Rogoberto Ribeiro</a>
+            Suporte
+            <a href="#">(88)8112-6816</a>
           </div>
         </div>
       </div>

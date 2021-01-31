@@ -1,0 +1,61 @@
+{{extend 'layout.html'}}
+<div class="text-center pt-5">
+    <div class="container">
+      <div class="row border">
+        <div class="mx-auto col-md-8" >
+          <h1 class="mb-3">{{=usuario_empresa.empresa.razaosocial}}</h1>
+          <p class="lead">{{=usuario_empresa.nome}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3 text-center">
+    <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-3 col-6 p-4 border">
+              <i class="d-block fa fa-3x mb-2 text-muted fa-users"></i>
+              <p class="lead">Acesso aos Clientes</p>
+              <a class="btn btn-primary btn-block" href="{{=URL('acs_clientes','index')}}">Acessar</a>
+          </div>
+        <div class="col-lg-3 col-6 p-4 border">
+            <i class="d-block fa fa-3x mb-2 text-muted fa-home"></i>
+          <p class="lead">Acesso aos Imóveis</p>
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_imoveis','index')}}">Acessar</a>
+        </div>
+          <div class="col-lg-3 col-6 p-4 border"> 
+              <i class="d-block fa fa-3x mb-2 text-muted fa-list"></i>
+              <p class="lead">Lista Recebimentos</p>
+              <a class="btn btn-primary btn-block" href="{{=URL('acs_recebimentos','index')}}">Acessar</a>
+          </div>
+           <div class="col-lg-3 col-6 p-4 border">
+            <i class="d-block fa fa-3x mb-2 text-muted fa-sort-amount-desc"></i>
+            <p class="lead">Despesas da Empresa</p>
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_despesas','index')}}">Acessar</a>
+        </div>
+        
+      </div>
+      <div class="row justify-content-center">
+          <div class="col-lg-3 col-6 p-4 border"> 
+            <i class="d-block fa fa-3x mb-2 text-muted fa-gears"></i>
+          <p class="lead">Acesso Administrativo</p> 
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_administrativo','index')}}" >Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border"> 
+            <i class="d-block fa fa-3x mb-2 text-muted fa-file-text"></i>
+          <p class="lead">Contratos Firmados</p> 
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_contratos','index')}}">Acessar</a>
+        </div>
+       
+        <div class="col-lg-3 col-6 p-4 border">
+            <i class="d-block fa fa-3x mb-2 text-muted fa-user-o"></i>
+          <p class="lead">Logins de Acesso</p>
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_logins','index')}}">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+            <i class="d-block fa fa-3x mb-2 text-muted fa-file-text-o"></i>
+          <p class="lead">Relatório por Mês</p>
+            <a class="btn btn-primary btn-block" href="{{=URL('acs_relatorios','index')}}">Acessar</a>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,115 @@
+# -*- coding: utf-8 -*-
+import datetime
+@auth.requires_login()
+def index():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    empresa= db.empresa(usuario.empresa)
+    mes=request.now.month
+    ano=request.now.year
+    if len(request.args) == 0:
+        redirect(URL(args=[mes,ano]))
+    mes=request.args(0, cast=int)
+    ano=request.args(1, cast=int)
+    primeira_data=datetime.date(ano, mes, 1)
+    ultima_data=datetime.date(ano, mes, 1)
+    nos=request.now.year
+    if (mes==12):
+        ultima_data=datetime.date(ano+1, 1, 1)
+    else:
+        ultima_data=datetime.date(ano, mes+1, 1)
+    rows = db((db.recebimento_contrato.empresa==usuario.empresa)&(db.recebimento_contrato.data_vencimento>=primeira_data)&(db.recebimento_contrato.data_vencimento<ultima_data)).select(orderby=db.recebimento_contrato.data_vencimento)
+    consul=(request.args(2))
+    if (consul):
+        rows = db((db.recebimento_contrato.empresa==usuario.empresa)&(db.recebimento_contrato.data_vencimento>=primeira_data)&(db.recebimento_contrato.data_vencimento<ultima_data)&(db.recebimento_contrato.status.contains(consul))).select(limitby=(0,35))
+    return locals()
+
+
+@auth.requires_login()
+def alterar_recibo():
+    response.view = 'generic.html' # use a generic view
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    recebimento_contrato = db.recebimento_contrato(request.args(0, cast=int))
+    if usuario.empresa!=recebimento_contrato.empresa:
+        redirect(URL('default','index'))
+    request.function=('Firmar Recebimento')
+    db.recebimento_contrato.id.writable=False
+    db.recebimento_contrato.id.readable=False
+    db.recebimento_contrato.data_vencimento.readable=True
+    db.recebimento_contrato.tipo.writable=True
+    db.recebimento_contrato.finalizado.writable=True
+    db.recebimento_contrato.valor_original.readable=True
+    db.recebimento_contrato.valor_recebido.writable=True
+    db.recebimento_contrato.valor_recebido.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.default=request.now
+    form = SQLFORM(db.recebimento_contrato, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Dados atualizados'
+        recebimento_contrato = db.recebimento_contrato(form.vars.id)
+        mes=request.now.month
+        dia=request.now.day
+        ano=request.now.year
+        data_hoje=datetime.date(ano, mes, dia)
+        if recebimento_contrato.finalizado==True:
+            recebimento_contrato.status="Quitado"
+        else:
+            if recebimento_contrato.data_vencimento<data_hoje:
+                recebimento_contrato.status="Atrasado"
+            else:
+                recebimento_contrato.status="Aguardando"
+        recebimento_contrato.update_record()
+        redirect(URL('acs_contratos','acessar',args=recebimento_contrato.contrato))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+
+@auth.requires_login()
+def alterar():
+    response.view = 'generic.html' # use a generic view
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
+    recebimento_contrato = db.recebimento_contrato(request.args(0, cast=int))
+    if usuario.empresa!=recebimento_contrato.empresa:
+        redirect(URL('default','index'))
+    request.function=('Firmar Recebimento')
+    db.recebimento_contrato.id.writable=False
+    db.recebimento_contrato.id.readable=False
+    db.recebimento_contrato.data_vencimento.readable=True
+    db.recebimento_contrato.tipo.writable=True
+    db.recebimento_contrato.finalizado.writable=True
+    db.recebimento_contrato.valor_original.readable=True
+    db.recebimento_contrato.valor_recebido.writable=True
+    db.recebimento_contrato.valor_recebido.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.writable=True
+    db.recebimento_contrato.data_recebimento.readable=True
+    db.recebimento_contrato.data_recebimento.default=request.now
+    form = SQLFORM(db.recebimento_contrato, request.args(0, cast=int), deletable=False)
+    if form.process().accepted:
+        session.flash = 'Dados atualizados'
+        recebimento_contrato = db.recebimento_contrato(form.vars.id)
+        mes=request.now.month
+        dia=request.now.day
+        ano=request.now.year
+        data_hoje=datetime.date(ano, mes, dia)
+        if recebimento_contrato.finalizado==True:
+            recebimento_contrato.status="Quitado"
+        else:
+            if recebimento_contrato.data_vencimento<data_hoje:
+                recebimento_contrato.status="Atrasado"
+            else:
+                recebimento_contrato.status="Aguardando"
+        recebimento_contrato.update_record()
+        redirect(URL('recido',args=recebimento_contrato.id))
+    elif form.errors:
+        response.flash = 'Erros no formulário!'
+    return dict(form=form)
+
+@auth.requires_login()
+def recido():
+    recebimento = db.recebimento_contrato(request.args(0, cast=int))
+    contrato = db.contrato_aluguel(recebimento.contrato)
+    return locals()

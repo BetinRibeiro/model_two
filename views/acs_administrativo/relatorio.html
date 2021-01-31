@@ -1,0 +1,182 @@
+{{extend 'layout.html'}}
+
+{{import datetime}}
+{{mes_atual=primeira_data.month}}
+{{ano_atual=primeira_data.year}}
+{{mes="Janeiro"}}
+{{if primeira_data.month==2:}}
+{{mes="Fevereiro"}}
+
+{{elif primeira_data.month==3:}}
+{{mes="Março"}}
+
+{{elif primeira_data.month==4:}}
+{{mes="Abril"}}
+
+{{elif primeira_data.month==5:}}
+{{mes="Maio"}}
+
+{{elif primeira_data.month==6:}}
+{{mes="Junho"}}
+
+{{elif primeira_data.month==7:}}
+{{mes="Julho"}}
+
+{{elif primeira_data.month==8:}}
+{{mes="Agosto"}}
+
+{{elif primeira_data.month==9:}}
+{{mes="Setembro"}}
+
+{{elif primeira_data.month==10:}}
+{{mes="Outubro"}}
+
+{{elif primeira_data.month==11:}}
+{{mes="Novembro"}}
+
+{{elif primeira_data.month==12:}}
+{{mes="Dezembro"}}
+{{pass}}
+{{if primeira_data.month==1:}}
+    {{primeira_data=datetime.date(primeira_data.year-1, 12, 1)}}
+{{else:}}
+    {{primeira_data=datetime.date(primeira_data.year,  primeira_data.month-1, 1)}}
+{{pass}}
+{{saldo=0}}
+<div class="py-5 text-center" >
+    <div class="container">
+        <div class="row">
+            <div class="mx-auto col-md-8">
+                <h3 class="mb-3">{{=empresa.razaosocial}}</h3>
+                <p class="lead">Relatorio Geral</p>
+            </div>
+        </div>
+        <div class="row pb-2">
+            <div class="col-md-6">
+                <ul class="list-group text-left pb-2">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">
+                                <b>Quantidade Clientes</b>
+                            </h6>
+                            <small class="text-muted">Total Pessoas Cadastradas</small>
+                        </div>
+                        <span class="text-muted">{{=empresa.q_clientes}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">
+                                <b>Quantidade de Imoveis</b>
+                            </h6>
+                            <small class="text-muted">Total de Imóveis Cadastrados</small>
+                        </div>
+                        <span class="text-muted">{{=empresa.q_imoveis}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">
+                                <b>Quantidade de Contratos</b>
+                            </h6>
+                            <small class="text-muted">Total Geral de Contratos</small>
+                        </div>
+                        <span class="text-muted">{{=empresa.q_contratos}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">
+                                <b>Total em Débito</b>
+                            </h6> 
+                            <small class="text-muted">{{=empresa.q_parcelas_atrasadas}} Parcelas</small>
+                        </div> 
+                        <span class="text-muted">R$ {{="{:,}".format(round(empresa.valor_debito,1)).replace(",",".")}}0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">
+                                <b>Total Aguardando</b>
+                            </h6> 
+                            <small class="text-muted">{{=empresa.q_parcelas_aguardadas}} Parcelas</small>
+                        </div> 
+                        <span class="text-muted">R$ {{="{:,}".format(round(empresa.valor_aguardando,1)).replace(",",".")}}0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+            <div class="row pb-2">
+                <div class="col-md-4">
+                    <a class="btn btn-primary btn-block" href="{{=URL(args=[primeira_data.month,primeira_data.year])}}">
+                        <i class="fa fa-fw fa-chevron-left"></i>&nbsp;Anterior 
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="">{{=mes}} {{=ano}}</h5>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-primary btn-block" href="{{=URL(args=[ultima_data.month,ultima_data.year])}}">&nbsp;Próximo 
+                        <i class="fa fa-fw fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+            <ul class="list-group mt-2 border pb-2">
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center">Recebido<br>
+                    <b>R$ {{="{:,}".format(round(total_recebido,1)).replace(",",".")}}0</b></li>
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center">Aguardando<br>
+                    <b>R$ {{="{:,}".format(round(total_aguardando,1)).replace(",",".")}}0</b></li>
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center">Atrasado<br>
+                    <b>R$ {{="{:,}".format(round(total_debito,1)).replace(",",".")}}0</b></li>
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center">Despesa Imóvel<br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_imoveis,1)).replace(",",".")}}0</b> </li>
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center">Despesa Empresa<br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_empresa,1)).replace(",",".")}}0</b></li>
+                {{saldo=total_recebido-total_despesa_imoveis-total_despesa_empresa}}
+                <li class=" border-0 list-group-item d-flex justify-content-between align-items-center text-primary"><b>Saldo</b><br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_empresa,1)).replace(",",".")}}0</b></li>
+            </ul>
+        </div>
+                 <div class="col-12 d-block d-sm-none pt-3">
+              <canvas  id="myChart" width="400" height="400"></canvas>
+          </div>
+    </div>
+</div>
+    
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    var ctx = document.getElementById('myChart');
+    var dados =  [parseFloat({{=total_recebido}}), parseFloat({{=total_aguardando}}), parseFloat({{=total_debito}}), parseFloat({{=total_despesa_imoveis}}), parseFloat({{=total_despesa_empresa}})];
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Recebido', 'Aguardando', 'Atrasado', 'Desp. Imóvel', 'Desp. Empresa'],
+        datasets: [{
+            label: "Dados do Mês",
+            data: dados,
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        }
+    }
+});
+</script>

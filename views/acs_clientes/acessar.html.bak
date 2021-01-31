@@ -1,0 +1,141 @@
+{{extend 'layout.html'}}
+{{cliente.cpf=cliente.cpf.replace(".","").replace("-","").replace("/","")}}
+                {{cpf = [int(char) for char in cliente.cpf if char.isdigit()]}}
+                {{for i in range(9, 11):}}
+                {{value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))}}
+                {{digit = ((value * 10) % 11) % 10}}
+                {{if digit != cpf[i]:}}
+                  {{aviso=False}}
+                      {{else:}}
+                
+                  {{aviso=True}}
+                    {{pass}} {{pass}}
+              {{if aviso==False:}}
+{{redirect(URL('index',args=[1,"cliente.cpf"]))}}
+{{pass}}
+<div class="py-5" >
+    <div class="container">
+        <div class="row text-center">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Acesso ao Cliente</h1>
+          <p class="lead">{{=cliente.razaosocial_nome}}</p>
+        </div>
+      </div>
+      
+      <div class="row text-left">
+        <div class="col-md-6">
+          <div class="row "  id="noprint">
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2" href="{{=URL('index')}}"><i class="fa fa-fw fa-bars"></i> Todos os Clientes&nbsp;</a></div>
+                    {{if cliente.conferido==False:}}
+            <div class="col-md-6"><a class="btn btn-primary btn-block my-2" href="{{=URL('acs_clientes','alterar', args=cliente.id)}}"><i class="fa fa-fw fa-pencil"></i>&nbsp;Alterar dados Cliente</a></div>
+              {{pass}}
+          </div>
+          <ul class="list-group mt-2 border">
+            <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0">
+                        <b>Nome/Razão Social</b>
+                    </h6> 
+                    <small class="text-muted">{{=cliente.razaosocial_nome}}</small>
+                </div> 
+                <span class="text-muted">#</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                  <div>
+                      <h6 class="my-0">
+                          <b>Apelido/Nome Fantasia</b>
+                      </h6> 
+                      <small class="text-muted">{{=cliente.apelido_nome_fantasia}}</small>
+                  </div> 
+                  <span class="text-muted">#</span>
+              </li>
+            {{cliente.telefone=(cliente.telefone).replace("(", "").replace(")", "").replace("-", "").replace(" ","")}}
+            {{cliente.telefone="("+(cliente.telefone)[0:2]+")"+(cliente.telefone)[2:6]+"-"+(cliente.telefone)[6:11]}}
+            {{cliente.celular=(cliente.celular).replace("(", "").replace(")", "").replace("-", "").replace(" ","")}}
+            {{cliente.celular="("+(cliente.celular)[0:2]+")"+(cliente.celular)[2:7]+"-"+(cliente.celular)[7:11]}}
+              <li class="list-group-item d-flex justify-content-between">
+                  <div>
+                      <h6 class="my-0" style=""><b>Contato</b></h6> 
+                      <small class="text-muted"> 
+                          
+                          <a  target="_blank" href="tel:+55-{{=cliente.telefone}}">
+                              <i class="fa fa-fw fa-1x py-1 fa-phone" ></i>
+                              {{=cliente.telefone}}
+                          </a>
+                          <a  target="_blank" class="text-success" href='https://api.whatsapp.com/send?phone=55{{=cliente.celular.replace("(", "").replace(")", "").replace("-", "")}}'>
+                              <i class="fa fa-fw fa-1x py-1 fa-whatsapp" ></i>
+                              {{=cliente.celular}}
+                          </a></small>
+                  </div> 
+                  <span class="text-muted">#</span>
+              </li>
+                {{cliente.cpf=cliente.cpf.replace(".","").replace("-","").replace("/","").replace(" ","")}}
+                {{if len(cliente.cpf)>11:}}
+                {{cliente.cpf=""+(cliente.cpf)[0:2]+"."+(cliente.cpf)[2:5]+"."+(cliente.cpf)[5:8]+"/"+(cliente.cpf)[8:12]+"-"+(cliente.cpf)[12:14]}}
+                {{cliente.tipo='Jurídica'}}
+                {{else:}}
+                {{cliente.cpf=""+(cliente.cpf)[0:3]+"."+(cliente.cpf)[3:6]+"."+(cliente.cpf)[6:9]+"-"+(cliente.cpf)[9:11]}}
+                {{cliente.tipo='Física'}}
+                {{pass}}
+                {{cliente.update_record()}}
+              <li class="list-group-item d-flex justify-content-between">
+                <div>
+                    <h6 class="my-0"><b>CPF/CNPJ</b></h6>
+                    <small><a href='https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp' target="_blank">{{=cliente.cpf}}</a></small>
+                </div> <span class="text-success">#</span>
+              </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <div>
+                  <h6 class="my-0" style=""><b>Email</b></h6> <small class="text-muted"><a href="mailto:{{=cliente.email}}"  target="_blank"><i class="fa fa-fw fa-envelope-open" ></i> {{=cliente.email}}</a></small>
+              </div> <span class="text-muted">#</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-6" style="">
+          <div class="row">
+            <div class="col-md-6"><a class="btn btn-primary my-2 btn-block" href="{{=URL('acs_clientes','cadastrar_contrato', args=[cliente.id,'fiador'])}}"><i class="fa fa-fw fa-plus"></i> Contrato com Fiador</a></div>
+              <div class="col-md-6"><a class="btn btn-primary my-2 btn-block" href="{{=URL('acs_clientes','cadastrar_contrato', args=[cliente.id,'caucao'])}}"><i class="fa fa-fw fa-plus"></i> Contrato com Caução'</a></div>
+          </div>
+          <ul class="list-group mt-2 border">
+              {{for row in rows:}}
+               <li class="list-group-item d-flex justify-content-between">
+              <div>
+                  <h6 class="my-0" style=""><b>{{=row.virgencia_meses}} X R$ {{="{:,}".format(round(row.valor_original,1)).replace(",",".")}}0</b></h6> 
+                  <small class="text-muted">{{=row.imovel.subtipo}} {{=row.imovel.lougradouro}} {{=row.imovel.numero}}</small>
+              </div> 
+                   <span class="text-muted" id="noprint">
+                       <a href="{{=URL('acs_contratos','acessar', args=row.id)}}" >
+                           <i class="fa fa-list fa-sign-in fa-2x"></i></i>
+                       </a>
+                  </span>
+            </li>
+          
+              {{pass}}
+          {{if usuario.tipo!="Usuario":}}
+           <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <h6 class="my-0" style=""><b>Conferência</b></h6>
+                {{if cliente.conferido==False:}}
+                    <small class="text-muted">Alterações Liberadas</small>
+                {{else:}}
+                    <small class="text-muted">Alterações Bloqueadas</small>
+                {{pass}}
+            </div>
+            <span class="text-muted" id="noprint">
+                
+                    {{if cliente.conferido==False:}}
+                <a class="btn btn-success"  href="{{=URL('acs_clientes','conferir', args=cliente.id)}}">
+                        <i class="fa fa-list fa-check-square-o fa-2x"></i>
+                    {{else:}}
+                    <a class="btn btn-danger"  href="{{=URL('acs_clientes','conferir', args=cliente.id)}}">
+                        <i class="fa fa-list fa-ban fa-2x "></i>
+                    {{pass}}
+                </a>
+            </span>
+        </li>
+                    {{pass}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

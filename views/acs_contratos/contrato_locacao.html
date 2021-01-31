@@ -1,0 +1,447 @@
+{{extend 'layout.html'}}
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;900display=swap" rel="stylesheet">
+<style type="text/css">
+    .imp {
+        font-size: 28px;
+    }
+    @page {
+        margin: 3cm 3cm 3cm 2cm;
+}
+</style>
+ 
+<div class="py-2 imp" >
+    <div class="container">
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary" href="{{=URL('acs_recebimentos','index')}}">
+                    <i class="fa fa-fw fa-list" ></i>
+                    Todos Recebimentos
+                </a>
+                <a class="btn btn-success text-white my-2" onClick="window.print()">
+                    <i class="fa fa-fw fa-print" ></i>
+                    Imprimir Recibo
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+       
+      <div class="row">
+          
+        <div class="col-md-12"  align="justify" style="font-family: Roboto" >
+<center><h1>CONTRATO DE LOCAÇÃO</h1></center>
+<br>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pelo presente instrumento particular, que entre si fazem, de um lado, como o
+        <b>LOCADOR: {{=contrato.empresa.razaosocial.upper()}}</b>, inscrito no 
+        {{if not len(contrato.empresa.cnpj)>13:}}
+        <b>CPF: {{=contrato.empresa.cnpj}}</b>
+        {{else:}}
+        <b>CNPJ: {{=contrato.empresa.cnpj}}</b>
+        {{pass}}, localizado na {{=contrato.empresa.lougradouro.upper()}}, NÚMERO {{=contrato.empresa.numero.upper()}},
+        {{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}, e como <b>LOCATÁRIO: {{=contrato.locatario.razaosocial_nome}}</b> , inscrito no
+        {{if contrato.locatario.tipo=='Física':}}
+        <b>CPF: {{=contrato.locatario.cpf}} {{=contrato.locatario.org_espedidor_cpf.upper()}}</b>,
+        <b>RG: {{=contrato.locatario.rg}} {{=contrato.locatario.org_espedidor_rg.upper()}}</b>
+        {{else:}}
+        <b>CNPJ: {{=contrato.locatario.cpf}}</b>
+        {{pass}}
+        têm entre si justo e acertado o presente <b>CONTRATO DE LOCAÇÃO DE IMÓVEL {{=contrato.tipo.upper()}}</b>, mediante as cláusulas e condições seguintes, que mutuamente aceitam, a saber:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>PRIMEIRA</b> – O <b>LOCADOR</b> declara que é legitimo possuidor de um imóvel localizado na <b>{{=contrato.imovel.lougradouro.upper()}}, NÚMERO {{=contrato.imovel.numero.upper()}}, BAIRRO: {{=contrato.imovel.bairro.upper()}}</b> NA CIDADE DE <b>{{=contrato.imovel.cidade.upper()}} {{=contrato.imovel.uf.upper()}}</b>, devidamente registrado no cartório de imóveis e, que se obriga, neste ato, a dar em locação ao <b>LOCATÁRIO</b> acima qualificada, mediante as seguintes <b>condições</b>:</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>SEGUNDA</b> – O prazo de locação é de <b>
+                
+                {{if contrato.virgencia_meses==6:}}<b> 6 (SEIS) MESES</b>
+                {{elif contrato.virgencia_meses==12:}}<b> 12 (DOZE) MESES</b>
+                {{elif contrato.virgencia_meses==24:}}<b> 24 (VINTE E QUATRO) MESES</b>
+                {{elif contrato.virgencia_meses==36:}}<b> 36 (TRINTA E SEIS) MESES</b>
+                {{elif contrato.virgencia_meses==48:}}<b> 48 (QUARENTA E OITO) MESES</b>
+                {{elif contrato.virgencia_meses==60:}}<b> 60 (SESSENTA) MESES</b>
+                {{elif contrato.virgencia_meses==120:}}<b> 120 (CENTO E VINTE) MESES</b>
+                {{pass}}</b>
+                , iniciando-se no dia <b>{{=contrato.data_inicial.day}} DE 
+                {{if contrato.data_inicial.month==1:}} JANEIRO
+                {{elif contrato.data_inicial.month==2:}} FEVEREIRO
+                {{elif contrato.data_inicial.month==3:}} MARÇO
+                {{elif contrato.data_inicial.month==4:}} ABRIL
+                {{elif contrato.data_inicial.month==5:}} MAIO
+                {{elif contrato.data_inicial.month==6:}} JUNHO
+                {{elif contrato.data_inicial.month==7:}} JULHO
+                {{elif contrato.data_inicial.month==8:}} AGOSTO
+                {{elif contrato.data_inicial.month==9:}} SETEMBRO
+                {{elif contrato.data_inicial.month==10:}} OUTUBRO
+                {{elif contrato.data_inicial.month==11:}} NOVEMBRO
+                {{elif contrato.data_inicial.month==12:}} DEZEMBRO
+                {{pass}}
+                DE  {{=contrato.data_inicial.year}}</b>, e terminando no dia <b>{{=contrato.data_final.day}} DE 
+                {{if contrato.data_final.month==1:}} JANEIRO
+                {{elif contrato.data_final.month==2:}} FEVEREIRO
+                {{elif contrato.data_final.month==3:}} MARÇO
+                {{elif contrato.data_final.month==4:}} ABRIL
+                {{elif contrato.data_final.month==5:}} MAIO
+                {{elif contrato.data_final.month==6:}} JUNHO
+                {{elif contrato.data_final.month==7:}} JULHO
+                {{elif contrato.data_final.month==8:}} AGOSTO
+                {{elif contrato.data_final.month==9:}} SETEMBRO
+                {{elif contrato.data_final.month==10:}} OUTUBRO
+                {{elif contrato.data_final.month==11:}} NOVEMBRO
+                {{elif contrato.data_final.month==12:}} DEZEMBRO
+                {{pass}}
+                DE  {{=contrato.data_final.year}}</b>, data em que o <b>LOCATÁRIO</b> se obriga a restituir o imóvel, ora locado, inteiramente desocupado e em perfeito estado de conservação e de limpeza, com a apresentação do comprovante de quitação e do corte de energia e água, bem como do pagamento e quitação das taxas de água e esgoto, ou fazer a renovação do contrato vencido.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>TERCEIRA</b> – O aluguel mensal inicia pactuado e mutuamente aceito para os 
+                {{if contrato.virgencia_meses==6:}}<b> 6 (SEIS) MESES</b>
+                {{elif contrato.virgencia_meses==12:}}<b> 12 (DOZE) MESES</b>
+                {{elif contrato.virgencia_meses==24:}}<b> 24 (VINTE E QUATRO) MESES</b>
+                {{elif contrato.virgencia_meses==36:}}<b> 36 (TRINTA E SEIS) MESES</b>
+                {{elif contrato.virgencia_meses==48:}}<b> 48 (QUARENTA E OITO) MESES</b>
+                {{elif contrato.virgencia_meses==60:}}<b> 60 (SESSENTA) MESES</b>
+                {{elif contrato.virgencia_meses==120:}}<b> 120 (CENTO E VINTE) MESES</b>
+                {{pass}} de <b>R$ {{="{:,}".format(round(contrato.valor_original,0)).replace(",",".")}}0
+
+<b id="teste">
+    
+                </b>
+               <script>Extenso({{=contrato.valor_original}})</script></b>, que deverá ser pago <u>  por boletos bancários, estes serão encaminhados por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b> </u>, ou deverá ser pago na <u>{{=contrato.empresa.lougradouro.upper()}}, NÚMERO {{=contrato.empresa.numero.upper()}},{{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}, ou por transferência bancária com dados bancarios informado pelo <b>LOCADOR</b> por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b></u>, na forma estabelecida no parágrafo primeiro, na forma estabelecida no parágrafo primeiro.</p>
+            
+            <p>
+                <b>Parágrafo Primeiro</b> – Os aluguéis deverão ser pagos no local indicado na cláusula anterior até o dia <b>
+                {{if contrato.data_contrato.day==1:}}01 (UM)
+                {{elif contrato.data_contrato.day==2:}}02 (DOIS)
+                {{elif contrato.data_contrato.day==3:}}03 (TRÊS)
+                {{elif contrato.data_contrato.day==4:}}04 (QUATRO)
+                {{elif contrato.data_contrato.day==5:}}05 (CINCO)
+                {{elif contrato.data_contrato.day==6:}}06 (SEIS)
+                {{elif contrato.data_contrato.day==7:}}07 (SETE)
+                {{elif contrato.data_contrato.day==8:}}08 (OITO)
+                {{elif contrato.data_contrato.day==9:}}09 (NOVE)
+                {{elif contrato.data_contrato.day==10:}}10 (DEZ)
+                {{elif contrato.data_contrato.day==11:}}11 (ONZE)
+                {{elif contrato.data_contrato.day==12:}}12 (DOZE)
+                {{elif contrato.data_contrato.day==13:}}13 (TREZE)
+                {{elif contrato.data_contrato.day==14:}}14 (QUATORZE)
+                {{elif contrato.data_contrato.day==15:}}15 (QUINZE)
+                {{elif contrato.data_contrato.day==16:}}16 (DEZESSEIS)
+                {{elif contrato.data_contrato.day==17:}}17 (DEZESSETE)
+                {{elif contrato.data_contrato.day==18:}}18 (DEZOITO)
+                {{elif contrato.data_contrato.day==19:}}19 (DEZENOVE)
+                {{elif contrato.data_contrato.day==20:}}20 (VINTE)
+                {{elif contrato.data_contrato.day==21:}}21 (VINTE E UM)
+                {{elif contrato.data_contrato.day==22:}}22 (VINTE E DOIS)
+                {{elif contrato.data_contrato.day==23:}}23 (VINTE E TRÊS)
+                {{elif contrato.data_contrato.day==24:}}24 (VINTE E QUATRO)
+                {{elif contrato.data_contrato.day==25:}}25 (VINTE E CINCO)
+                {{elif contrato.data_contrato.day==26:}}26 (VINTE E SEIS)
+                {{elif contrato.data_contrato.day==27:}}27 (VINTE E SETE)
+                {{elif contrato.data_contrato.day==28:}}28 (VINTE E OITO)
+                {{elif contrato.data_contrato.day==29:}}29 (VINTE E NOVE)
+                {{elif contrato.data_contrato.day==30:}}30 (TRINTA)
+                {{elif contrato.data_contrato.day==31:}}31 (TRINTA E UM)
+
+                {{pass}}</b> com tolerância de<b> 5 (cinco) dias</b> subseqüente ao vencimento sem multa, após essa data, Após essa data, somente com acréscimo de juros de mora e correção monetária, esta última hipótese se o atraso for superior a<b> 30 (trinta) dias</b>.
+            </p>
+            <p>
+               <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parágrafo Segundo</b> – Sempre que o pagamento for efetuado por meio de cheque, a dívida somente estará quitada após a efetivacompensação do mesmo.Em caso da não ocorrência de compensação, por qualquer causa ou motivo, implicará automaticamente incidência das cominações para os casos de inadimplência, conforme cláusula quarta, notadamente a multa contratual, os juros moratórios, convencional monetário incidente sobre o valor da obrigação considerada não paga. 
+
+            </p>
+            <p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>QUARTA</b> – Ocorrendo atraso no pagamento do aluguel, após o prazo determinado na cláusula 3ª, será o mesmo acrescido de uma multa de 10% (dez por cento) sobre o valor de prestação locatícia mais juros de mora e correção monetária, independentemente do procedimento que porventura for adotado, a título de honorários administrativos.
+            </p>
+            <p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>QUINTA</b> – O <b>LOCATÁRIO</b> se obriga a:
+            </p>
+                   <ul>
+                        <li>
+                            <b>A)</b> &nbsp;Manter o imóvel no mais rigoroso estado de conservação e limpeza, obriga-se ainda, o LOCATÁRIO além do pagamento de aluguel e satisfazer o pagamento, por sua conta exclusiva do consumo de água, energia elétrica e esgoto, bem como, todos os demais tributos municipais que recaírem sobre o imóvel locado.
+            </li><br>
+                       <li>
+                          <b> B)</b> &nbsp;Fazer, as suas custas, as despesas que porventura se tornarem necessárias para conservação das pinturas, portas de aço, fechaduras, trincos, vidros, torneiras, puxadores, instalações elétricas e sanitárias, limpeza reparos e desentupimento de encanamento de água, esgotos etc. e bem assim a conservação de passeio fronteiriço. Mantendo tudo em perfeito estado de funcionamento, todo o material empregado para o bom cumprimento desta cláusula deverá ser de qualidade, tipo e medida da existente no imóvel. No caso de prédio residencial, com poço, bomba para água e fossas, os respectivos encargos de limpeza, manutenção e reparos, ficarão sempre por conta do <b>LOCATÁRIO</b>.
+                       </li><br>
+                       <li>
+                           <b>C)</b> &nbsp;Não fazer qualquer instalação ou adaptações ou benfeitorias, quaisquer que sejam sua natureza, inclusive necessária, sem a autorização do <b>LOCADOR</b>. Estas uma vez feitas incorporadas ao imóvel, não serão indenizadas e nem gerarão direito de retenção.
+                       </li><br>
+                       <li>
+                           <b>D)</b> &nbsp;Não pôr vitrinas, anúncios, ou dísticos na parte do prédio senão nos lugares para isso determinado e com as dimensões e formatos aprovados, previamente pelo <b>LOCADOR</b>.</li><br>
+                       <li>
+                           <b>E)</b>	O <b>LOCATÁRIO</b> declara haver recebido o imóvel ora locado em perfeito estado de conservação e limpeza e funcionamento, assim como se obriga e devolve-lo na mais perfeita ordem e no mesmo estado de conservação, limpeza funcionamento de modo que possa ser realugado imediatamente, sem a necessidade de qualquer reparo.E precisando de algum concerto e pintura no apartamento o locatário contratará a pessoa indicada pelo locador.
+<br><br>
+                           (Junto com o presente contrato, assim o <b>LOCATÁRIO</b> o Relatório de Vistoria), sobre a situação do imóvel que fica fazendo parte deste instrumento.
+
+                       </li><br>
+            </ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>SEXTA</b> – A presente locação não poderá ser cedida ou transferida, no todo ou parte, sem expresso consentimento, por escrito do <B>LOCADOR</B>. Se, entretanto o <B>LOCATÁRIO</B> notificar o <B>LOCADOR</B> da ocorrência de uma das hipóteses previstas nesta cláusula fica dessa já ciente de que seu eventual silêncio inércia, não traduzirá consentimento tácito.
+
+  </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>SÉTIMA</b> - O imóvel, ora locado, destina-se a aluguel <b>contrato.tipo</b>, não podendo sua destinação ou atividades ser alteradas sem o expresso consentimento do <B>LOCADOR</B> ou seu representante legal.
+
+	        </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>OITAVA</b> – No caso de desapropriação do imóvel ora locado, ficará o <B>LOCADOR</B> desobrigado por todas as cláusulas deste contrato, ressalvando o <B>LOCATÁRIO</B> tão somente faculdade de haver do poder desapropriaste e indenização que tiver direito.
+
+	       </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>NONA</b> – Nenhuma intimação do serviço sanitário será motivo para o <B>LOCATÁRIO</B> abandonar o imóvel ou pedir a rescisão deste contrato, salvo precedendo vistoria judicial que apure estar a construção em ameaça de ruína.
+
+  </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA</b> – Todas as obrigações oriundas do presente verter-se-ão independente de qualquer interpelação judicial ou extrajudicial.
+
+    </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA PRIMEIRA</b> – Se o <b>LOCATÁRIO</b>, usando da faculdade que lhe confere o artigo 4º da lei nº 8.245/91, devolver o imóvel locado antes do vencimento do prazo ajustado na cláusula primeira, ou der causa a rescisão deste contrato pagará ao <B>LOCADOR</B> a multa compensatória de 03 (três) meses, a ser cobrada em ação de execução, que em qualquer hipótese, será sempre devida por inteiro. 
+
+        </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA SEGUNDA</b> – Permanecendo o <B>LOCATÁRIO</B> no imóvel, após escoado o prazo para a desocupação voluntária nos casos de denúncia condicionada, pagará ele o aluguel pena que vier a ser arbitrado na notificação premonitória na forma do que dispõe o artigo 575, do Código Civil Brasileiro.
+
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA TERCEIRA</b> – Ocorrendo ações de despeje ou qualquer outra medida judicial que o <B>LOCADOR</B> venha a ter ajuizar em face do <B>LOCATÁRIO</B> será competente o Foro de Juazeiro do Norte, Estado do Ceará, que é o da situação do imóvel, com a expressa renúncia de qualquer outro, por mais privilegiado que seja, para dirimir as questões resultantes da execução do presente contrato, ficando a cargo do <B>LOCATÁRIO</B> os honorários de advogado do <B>LOCADOR</B> que será de 20% sobre o valor da causa, assim como pagamento do principal acrescido de correção monetária, multa, juros e todas as despesas judiciais.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA QUARTA</b> – Ocorrem por conta do <B>LOCATÁRIO</B> todas as despesas resultantes do presente contrato, inclusive as de registro e taxas de honorários administrativos.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA QUINTA</b> – O <B>LOCADOR</B> poderá, em qualquer tempo quando julgar conveniente, vistoriar o imóvel locado, por si ou pessoa de sua inteira confiança, a fim de verificar o seu estado de conservação.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA SEXTA</b> – Em caso de incêndio ou qualquer outra calamidade, por culpa do <B>LOCATÁRIO</B>, responderá este, pelos danos físicos do imóvel, indenizando o <B>LOCADOR</B> dos prejuízos causados. Caso em que, o incêndio ou calamidade, tenha sido causado por causa fortuito ou força maior, ficará o <b>LOCATÁRIO</b> obrigado a fazer a entrega imediata do imóvel locado para execução das obras necessárias.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA SÉTIMA</b> – No caso de AÇÃO DE DESPEJO ou qualquer outra medida judicial intentada pelo <B>LOCADOR</B> ou seu PROCURADOR, responsabilize-se o <B>LOCATÁRIO</B> pelas custas judiciais e honorários do <B>LOCADOR</B> ou PROCURADOR, a que vier a ser condenado o <B>LOCATÁRIO</B>, assim como, em caso de COBRANÇA JUDICIAL, pelo principal acrescido dos juros de mora e da correção monetária.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA OITAVA</b> – No caso de morte, falência, insolvência ou mudança de domicilio dos fiadores, o <B>LOCATÁRIO</B> se obriga no prazo de 30 (trinta) dias, a dar substituto idôneo, a juízo do <B>LOCADOR</B>.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>DÉCIMA NONA</b> – Correrá por conta exclusiva do <B>LOCATÁRIO</B> todos os impostos ou taxas que incidirem ou venham incidir sobre o imóvel locado, objeto deste contrato, bem como nas despesas e encargos mensais do prédio, entendidas estas como as gerais de conservação e manutenção, incluídas, entre outras, as relativas ao consumo de água, luz, taxa sanitária., devendo ser pagos diretamente aos órgãos arrecadadores.
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA</b> – A diferença de impostos, multas ou acréscimos a que der causa pela retenção dos avisos ou das notificações, será paga pelo <B>LOCATÁRIO</B>.
+
+	         </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA PRIMEIRA</b> – Obriga-se o <B>LOCATÁRIO</B>, sob pena de infração contratual, a fazer chegar às mãos do <B>LOCADOR</B> ou de seu PROCURADOR, todos os avisos de imposto predial, taxas (devidamente quitadas), notificações, intimações etc.
+.  
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA SEGUNDA</b> - O ALUGUEL PACTUADO NA CLÁSULA 3ª deste contrato será reajustado <b>ANUALMENTE</b> com aumento conforme a majoração (mercado) mais variação de IGP-DI, FGV, INCC/FVG, IPC-DI qual dessas variações apresentarem maior índice, ou será renovado mediante livre negociação entre as partes.
+
+	</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Findo o presente contrato ou sendo a locação do <B>LOCATÁRIO</B> continuar na posse do imóvel locado a partir do dia seguinte ao final do contrato, considerar-se-á renovado o contrato em todos os seus termos e garantias, inclusive o fiador, e o aluguel será majorado na forma e nos prazos estabelecidos.</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA TERCEIRA</b> - O <B>LOCATÁRIO</B> obriga-se, no ato de devolução do imóvel a apresentar as certidões negativas de consumo de água e energia elétrica.
+
+	
+
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA QUARTA</b> – Finda, extinta ou rescindida a locação por qualquer motivo, obriga-se o <B>LOCATÁRIO</B> a devolver as chaves do imóvel, perfeitamente pintado, limpo e encerado, completo de chaves, ferragens, vidros, louças sanitárias, instalações hidráulicas e elétricas, sem despesas para o <B>LOCADOR</B>, nos escritórios da Administradora ou aonde vier a ser designado pelo <B>LOCADOR</B>. Nessa oportunidade, será o imóvel vistoriado por pessoa de confiança do <B>LOCADOR</B> ou da Administradora a fim de confirmar se o imóvel se encontra nas condições exigidas, ficando o <B>LOCATÁRIO</B> obrigado a pagar as indenizações pelos danos que forem verificados por culpa direta ou indireta ou ainda, pelo simples desgaste do uso.
+<br>
+            
+	</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Caso não seja feita a liquidação na oportunidade fica garantido ao <B>LOCADOR</B> o direito de não receber as chaves do imóvel para fins de extinção da locação, continuando a vigorar as cláusulas contratuais até que seja recompostos o imóvel ressalvando o direito de <B>LOCADOR</B> de optar pela vistoria judicial com arbitramento o <B>LOCATÁRIO</B> com todas as despesas decorrentes, inclusive pelo aluguel e demais encargos até a efetiva liberação do imóvel, Por outro lado, o <b>LOCATÁRIO</b> se obriga a provar, ao devolver o imóvel, que o mesmo se encontra em perfeitas condições de habitabilidade. 
+
+</p><p>Não fazendo tal comprovação autoriza o <B>LOCADOR</B> a executar as obras necessárias e reparos, fazendo a cobrança executiva dele <b>LOCATÁRIO</b>.
+ 
+            </p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA QUINTA</b> - Ao término do contrato, caso o mesmo não queira renovar, o <b>LOCATÁRIO</b> deverá entregar o imóvel limpo, pintado em perfeito estado, e as contas de Enel e Cagece devidamente em dias com pedido de cortes. Caso não cumpra o prometido, deixando o imóvel sujo e contas pendentes, será negativado após 10 dias do descumprimento da clausula.
+
+</p>
+            
+{{if contrato.fiador!=None:}}
+	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA-SEXTA </b>– – Face à disposição do artigo 22, VII combinado com o art. 25 da Lei 8.245/91, e para prevenir a responsabilidade dela decorrente, o  <b>LOCATÀRIO</b>.  autoriza expressamente o <b>LOCADOR</b> a cobrar, juntamente com o aluguel mensal, o valor do Imposto Predial e Territorial Urbano – IPTU do imóvel locado dividido em duodécimos. </p>
+
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA– SÉTIMA  </b>– Finda, extinta ou rescindida a locação por qualquer motivo, obriga-se o <b>LOCATÁRIO</b> a devolver as chaves do imóvel, perfeitamente pintado, limpo e encerado, completo de chaves, ferragens, vidros, louças sanitárias, instalações hidráulicas e elétricas, sem despesas para o <b>LOCADOR</b>, nos escritórios da Administradora ou aonde vier a ser  designado pelo <b>LOCADOR</b>. Nessa oportunidade, será o imóvel vistoriado por pessoa de confiança do <b>LOCADOR</b> ou da Administradora a fim de confirmar se o imóvel se encontra nas condições exigidas, ficando o <b>LOCATÁRIO</b> obrigado a pagar as indenizações pelos danos que forem verificados pó culpa direta ou indireta ou ainda, pelo simples desgaste do uso. </p>
+
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Caso não seja feita a liquidação na oportunidade fica garantido ao <b>LOCADOR</b> o direito de não receber as chaves do imóvel para fins de extinção da locação, continuando a vigorar as cláusulas contratuais até que seja recompostos o imóvel ressalvando o direito de <b>LOCADOR</b> de optar pela vistoria judicial com arbitramento o <b>LOCATÁRIO</b> com todas as despesas decorrentes, inclusive pelo aluguel e demais encargos até a efetiva liberação do imóvel, Por outro  lado, o <b>LOCATÁRIO</b> se obriga a provar, ao devolver o imóvel, que o mesmo se encontra em perfeitas condições de habitabilidade. </p>
+
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Não fazendo tal comprovação autoriza o <b>LOCADOR</b> a executar as obras necessárias e reparos, fazendo a cobrança executiva dele <b>LOCATÀRIO</b>. </p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abaixo, assinam também o presente contrato como fiador e principal pagador, solidariamente com o <b>LOCATÁRIO</b> por todas as obrigações neste exaradas, cuja responsabilidade, entretanto, perdurará até a entrega real e efetiva das chaves do imóvel locado, especialmente quanto ao pagamento do aluguel mensal, <b>AO SENHOR(A): {{contrato.fiador.razaosocial_nome.upper()}}, {{if contrato.fiador.tipo=="Física":}} CPF: {{=contrato.fiador.cpf.upper()}},  RG: {{=contrato.fiador.rg}} {{else:}} CNPJ: {{=contrato.fiador.cpf.upper()}} {{pass}}, residente na  {{=contrato.fiador.lougradouro}} , N° {{=contrato.fiador.numero}}, BAIRRO: {{=contrato.fiador.bairro}} , {{=contrato.fiador.cidade}} {{=contrato.fiador.uf}}, {{if len(contrato.fiador.telefone)>10:}}  TELEFONE:  {{=contrato.fiador.telefone}},{{pass}}</b>  FIADOR declara, expressamente que a sua responsabilidade perdurará até a entrega  das chaves, renunciando, à faculdade contida no art. 835 do código civil.As partes contratantes elegem o foro da situação do imóvel, qualquer que seja o seu domicílio. </p>
+{{pass}}
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E por estarem justos e contratados, assinam o presente instrumento em 02 (duas vias) de igual teor, na presença de testemunhas que igualmente abaixo assinam: </p>
+            <br>
+            <br>
+<center>
+    <h4>
+        <b>
+      {{=contrato.local_contrato}}  DE {{=contrato.data_contrato.day}} DE 
+                {{if contrato.data_contrato.month==1:}} JANEIRO
+                {{elif contrato.data_contrato.month==2:}} FEVEREIRO
+                {{elif contrato.data_contrato.month==3:}} MARÇO
+                {{elif contrato.data_contrato.month==4:}} ABRIL
+                {{elif contrato.data_contrato.month==5:}} MAIO
+                {{elif contrato.data_contrato.month==6:}} JUNHO
+                {{elif contrato.data_contrato.month==7:}} JULHO
+                {{elif contrato.data_contrato.month==8:}} AGOSTO
+                {{elif contrato.data_contrato.month==9:}} SETEMBRO
+                {{elif contrato.data_contrato.month==10:}} OUTUBRO
+                {{elif contrato.data_contrato.month==11:}} NOVEMBRO
+                {{elif contrato.data_contrato.month==12:}} DEZEMBRO
+                {{pass}}
+                DE  {{=contrato.data_contrato.year}}
+        </b>
+    </h4>
+</center>
+            <div style="page-break-after: always;"></div>
+<br>
+            <p>
+                ____________________________________________________
+            </p>
+    <p><b>{{=contrato.empresa.razaosocial.upper()}}</b></p>
+    <p><b>CNPJ: {{=contrato.empresa.cnpj.upper()}}</b></p>
+    <p><b>LOCADOR</b></p>
+    <p><b>FONE: {{=contrato.empresa.telefone.upper()}}</b></p>
+    <p><b>FONE: {{=contrato.empresa.celular.upper()}}</b></p>
+<br><br><br>
+            <p>
+                ____________________________________________________
+            </p>
+    <p><b>{{=contrato.locatario.razaosocial_nome.upper()}}</b></p>
+    <p><b>CPF/CNPJ: {{=contrato.locatario.cpf.upper()}}</b></p>
+    <p><b>LOCATÁRIO</b></p>
+    <p><b>FONE: {{=contrato.locatario.telefone.upper()}}</b></p>
+    <p><b>FONE: {{=contrato.locatario.celular.upper()}}</b></p>
+<br><br><br>
+            <p>
+                
+{{if contrato.fiador!=None:}}
+                ____________________________________________________
+            </p>
+            
+    <p><b>{{=contrato.fiador.razaosocial_nome.upper()}}</b></p>
+    <p><b>CPF/CNPJ: {{=contrato.fiador.cpf.upper()}}</b></p>
+    <p><b>FIADOR</b></p>
+    <p><b>FONE: {{=contrato.fiador.telefone.upper()}}</b></p>
+    <p><b>FONE: {{=contrato.fiador.celular.upper()}}</b></p>
+            {{pass}}
+
+
+
+
+          </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = Extenso({{=contrato.valor_original}});
+    function Extenso(vlr){
+
+    var Num=parseFloat(vlr);
+    if (vlr == 0)
+    {
+    {document.getElementById('teste').innerHTML = extenso;}
+}else{
+
+    var inteiro = parseInt(vlr);; // parte inteira do valor
+    if(inteiro<1000000000000000)
+    {
+
+    var resto = Num.toFixed(2) - inteiro.toFixed(2);       // parte fracionária do valor
+    resto=resto.toFixed(2)
+    var vlrS =  inteiro.toString();    
+
+    var cont=vlrS.length;
+    var extenso="";
+    var auxnumero;
+    var auxnumero2;
+    var auxnumero3;
+
+    var unidade =["", "um", "dois", "três", "quatro", "cinco",
+    "seis", "sete", "oito", "nove", "dez", "onze",
+    "doze", "treze", "quatorze", "quinze", "dezesseis",
+    "dezessete", "dezoito", "dezenove"];
+
+var centena = ["", "cento", "duzentos", "trezentos",
+    "quatrocentos", "quinhentos", "seiscentos",
+    "setecentos", "oitocentos", "novecentos"];
+
+var dezena = ["", "", "vinte", "trinta", "quarenta", "cinquenta",
+    "sessenta", "setenta", "oitenta", "noventa"];
+
+var qualificaS = ["reais", "mil", "milhão", "bilhão", "trilhão"];
+var qualificaP = ["reais", "mil", "milhões", "bilhões", "trilhões"];
+
+for (var i=cont;i > 0;i--)
+{   
+    var verifica1="";
+    var verifica2=0;
+    var verifica3=0;
+    auxnumero2="";
+    auxnumero3="";
+    auxnumero=0;
+    auxnumero2 = vlrS.substr(cont-i,1);    
+    auxnumero = parseInt(auxnumero2);
+
+
+    if((i==14)||(i==11)||(i==8)||(i==5)||(i==2))
+    {
+        auxnumero2 = vlrS.substr(cont-i,2);
+        auxnumero = parseInt(auxnumero2);
+    }
+
+    if((i==15)||(i==12)||(i==9)||(i==6)||(i==3))
+    {   
+        extenso=extenso+centena[auxnumero];
+        auxnumero2 = vlrS.substr(cont-i+1,1)
+        auxnumero3 = vlrS.substr(cont-i+2,1)
+
+        if((auxnumero2!="0")||(auxnumero3!="0"))
+        extenso+=" e ";
+
+    }else
+
+    if(auxnumero>19){
+        auxnumero2 = vlrS.substr(cont-i,1);
+        auxnumero = parseInt(auxnumero2);
+        extenso=extenso+dezena[auxnumero];
+        auxnumero3 = vlrS.substr(cont-i+1,1)
+
+        if((auxnumero3!="0")&&(auxnumero2!="1"))
+        extenso+=" e ";
+    }
+        else if((auxnumero<=19)&&(auxnumero>9)&&((i==14)||(i==11)||(i==8)||(i==5)||(i==2)))
+        {
+            extenso=extenso+unidade[auxnumero];   
+        }else if((auxnumero<10)&&((i==13)||(i==10)||(i==7)||(i==4)||(i==1)))
+        {
+            auxnumero3 = vlrS.substr(cont-i-1,1);
+            if((auxnumero3!="1")&&(auxnumero3!=""))
+            extenso=extenso+unidade[auxnumero]; 
+        }
+
+        if(i%3==1)
+        {       
+            verifica3 = cont-i;
+            if(verifica3==0)
+            verifica1 = vlrS.substr(cont-i,1);
+
+            if(verifica3==1)
+            verifica1 = vlrS.substr(cont-i-1,2);
+
+            if(verifica3>1)
+            verifica1 = vlrS.substr(cont-i-2,3);
+
+         verifica2 = parseInt(verifica1);
+
+         if(i==13)
+         {
+            if(verifica2==1){
+            extenso=extenso+" "+qualificaS[4]+" ";
+        }else if(verifica2!=0){extenso=extenso+" "+qualificaP[4]+" ";}}
+            if(i==10)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[3]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[3]+" ";}}
+            if(i==7)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[2]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[2]+" ";}}
+            if(i==4)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[1]+" ";
+            }else if(verifica2!=0){extenso=extenso+" "+qualificaP[1]+" ";}}
+            if(i==1)
+            {
+                if(verifica2==1){
+                extenso=extenso+" "+qualificaS[0]+" ";
+            }else {extenso=extenso+" "+qualificaP[0]+" ";}}
+        }
+    }
+    resto = resto * 100;
+    var aexCent=0;
+    if(resto<=19&&resto>0)
+    extenso+=" e "+unidade[resto]+" Centavos";
+    if(resto>19)
+    {
+        aexCent=parseInt(resto/10);
+
+    extenso+=" e "+dezena[aexCent]
+    resto=resto-(aexCent*10);
+
+    if(resto!=0)
+    extenso+=" e "+unidade[resto]+" Centavos";
+    else extenso+=" Centavos";
+    }
+
+        {document.getElementById('teste').innerHTML = extenso;}
+}
+else
+{document.getElementById('teste').value = "Numero maior que 999 trilhões";}
+}
+}
+    
+    window.onload = initPage;
+</script>

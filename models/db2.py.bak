@@ -1,0 +1,39 @@
+# -*- coding: utf-8 -*-
+#Essa estrutura será apresentada no index default
+db.define_table('cabecalho',
+                Field('titulo', 'string',label='Titulo', default=""),
+                Field('sub_titulo', 'string',label='Sub Titulo', default=""),
+                Field('texto', 'text',label='Texto', default=""),
+                Field('link', 'string',label='Link', default="https://"),
+                Field('titulo_botao', 'string',label='Titulo Botão', default="Acessar"),
+                Field('ativo', 'boolean', default=True),
+                auth.signature,
+                format='%(titulo)s')
+
+db.define_table('artigo',
+                Field('imagem', 'upload', label='imagem',requires = IS_IMAGE()),
+                Field('titulo', 'string',label='Titulo', default=""),
+                Field('texto', 'text',label='Texto', default=""),
+                Field('link', 'string',label='Link', default="https://"),
+                Field('titulo_botao', 'string',label='Titulo Botão', default="Acessar"),
+                Field('ativo', 'boolean', default=True),
+                auth.signature,
+                format='%(titulo)s')
+
+db.define_table('desenvolvedor',
+                Field('imagem', 'upload', label='Imagem',requires = IS_IMAGE()),
+                Field('nome', 'string',label='Nome', default=""),
+                Field('funcao', 'string',label='Função', default="CEO e Fundador"),
+                Field('frase', 'string',label='Frase', default="O impossivel é só questão de opinião"),
+                Field('whatsapp', 'string',label='Whatsapp', default="88988776655"),
+                Field('ativo', 'boolean', default=True),
+                auth.signature,
+                format='%(nome)s')
+
+db.define_table('caracteristica',
+                Field('titulo', 'string',label='Titulo', default=""),
+                Field('texto', 'text',label='Texto', default=""),
+                Field('link', 'string',label='Link', default="https://"),
+                Field('ativo', 'boolean', default=True),
+                auth.signature,
+                format='%(titulo)s')

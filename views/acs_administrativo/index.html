@@ -1,0 +1,54 @@
+{{extend 'layout.html'}}
+<div class="text-center pt-5" >
+    <div class="container">
+      <div class="row border">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Acesso Administrativo</h1>
+          <p class="lead" style="">nome da empresa</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3 text-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-gears"></i>
+          <p class="lead">Dados da Empresa</p>
+          <a class="btn btn-block btn-warning" href="{{=URL('acs_administrativo','alterar_dados')}}">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-home"></i>
+          <p class="lead">Imoveis Disponiveis</p>
+          <a class="btn btn-block btn-warning" href="{{=URL('acs_imoveis','disponiveis')}}">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-bar-chart"></i>
+          <p class="lead">Relatorio Geral </p>
+          <a class="btn btn-block btn-warning" href="{{=URL('acs_administrativo','relatorio')}}">Acessar</a>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-circle"></i>
+          <p class="lead">Lista de Débito</p>
+          <a class="btn btn-block btn-warning" href="#">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-circle"></i>
+          <p class="lead">Opção I</p>
+          <a class="btn btn-block btn-warning" href="#">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-circle"></i>
+          <p class="lead">Opção I</p>
+          <a class="btn btn-block btn-warning" href="#">Acessar</a>
+        </div>
+        <div class="col-lg-3 col-6 p-4 border">
+          <i class="d-block fa fa-3x mb-2 text-muted fa-circle"></i>
+          <p class="lead">Opção I</p>
+          <a class="btn btn-block btn-warning" href="#">Acessar</a>
+        </div>
+      </div>
+    </div>
+  </div>

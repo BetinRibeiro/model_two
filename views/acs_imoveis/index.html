@@ -1,0 +1,127 @@
+{{extend 'layout.html'}}
+<div class="py-5" >
+    <div class="container">
+        <div class="row text-center">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Relação de Imóveis</h1>
+          <p class="lead">{{=empresa.razaosocial}}</p>
+        </div>
+      </div>
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary my-2" href="{{=URL('acs_sistema','index')}}">
+                    <i class="fa fa-navicon fa-fw"></i>&nbsp;Inicio
+                </a>
+                <a class="btn btn-primary my-2" href="{{=URL('cadastrar')}}">
+                    <i class="fa fa-user-plus fa-fw"></i>&nbsp;Cadastrar Imovel
+                </a>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row m-2">
+                    <input type="text" id="noprint" class="form-control col-9 col-form-label ml-2" name="busca" placeholder="Pesquisa Lougradouro/Bairro" id="input"/>
+                    <div class="col-2">
+                        <button class="btn btn-primary botao "  type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            {{if len(rows)==0:}}
+            <center>
+            <marquee>
+                Você não possui nem um imovel cadastrado
+            </marquee>
+                </center>
+            {{pass}}
+      <div class="row border">
+            {{for row in rows:}}
+          
+        <div class="col-md-6">
+          <div class="card text-center m-1 border" >
+            <div class="card-header">
+              <h5 class="card-title">
+                  {{if row.status=="Disponivel":}}
+                  <i class="fa fa-fw fa-1x py-1 fa-circle text-success" ></i>
+                  {{else:}}
+                  <i class="fa fa-fw fa-1x py-1 fa-circle text-danger" ></i>
+                  {{pass}}
+                  {{=row.tipo}} - {{=row.status}}
+                   </h5>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{=row.cep}} </h5>
+                <p>
+                <a class="text-dark" target="_blank" href="https://www.google.com/maps/place/+({{=row.lougradouro}},{{=row.numero}},{{=row.bairro}},{{=row.cidade}},{{=row.uf}})">
+                    <i class="fa fa-fw fa-1x py-1 fa-map-marker" ></i>
+                    {{=row.lougradouro}}, {{=row.numero}}<br> {{=row.bairro}}<br> {{=row.cidade}} {{=row.uf}}
+                </a>
+                </p>
+                {{if usuario.tipo!="Usuario":}}
+                <p>
+                    R$ {{="{:,}".format(round(row.valor_desp_total,1)).replace(",",".")}}0 de Despesas
+                </p>
+                <p>{{=row.q_parcelas_pagas}} Parcelas Pagas | R$ {{="{:,}".format(round(row.valor_recebido,1)).replace(",",".")}}0
+                </p>
+
+
+                <p>{{=row.q_parcelas_aguardadas}} Parcelas Aguardando | R$ {{="{:,}".format(round(row.valor_aguardando,1)).replace(",",".")}}0  </p>
+                {{pass}}
+                {{if row.q_parcelas_atrasadas>0:}}
+                <p class="text-danger">{{=row.q_parcelas_atrasadas}} Parcelas em Atraso | R$ {{="{:,}".format(round(row.valor_debito,1)).replace(",",".")}}0 </p>
+            {{else:}}
+                <p>
+                    Imovel sem Pendencia
+                </p>
+                    {{pass}}
+                                
+
+              <a href="{{=URL('acessar', args=row.id)}}" class="btn btn-primary">Acessar</a>
+            </div>
+          </div>
+        </div>
+            {{pass}}
+      </div>
+<div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Navegação de página exemplo">
+  <ul class="pagination justify-content-end">
+        {{ if pagina != 1: }}
+        <li class="page-item">
+            <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina-1) }}">
+                <i class="fa fa-fw fa-arrow-left"></i>
+                Anterior&nbsp;</a>
+        </li>
+        {{ pass }}
+
+        {{ if pagina != paginas: }}
+        <li class="page-item">
+             <a class="btn btn-outline-primary m-1" href="{{ =URL(args=pagina+1) }}" >
+                Próximo&nbsp;
+                <i class="fa fa-fw fa-arrow-right"></i>
+            </a>
+        </li>
+        {{ pass }}
+    </ul>
+</nav>
+</div>
+</div>
+  </div>
+  </div>
+
+<script>
+    var inputElement = document.querySelector('input[name=busca]');
+    var btnElement = document.querySelector('button.botao');
+
+    btnElement.onclick = function(){
+     var busca= inputElement.value;
+        window.location.href = "{{=URL('index')}}"+"/1/"+busca
+
+    }
+    $(document).keypress(function(e) {
+    if(e.which == 13) {
+     var busca= inputElement.value;
+        window.location.href = "{{=URL('index')}}"+"/1/"+busca
+    }
+});
+</script>

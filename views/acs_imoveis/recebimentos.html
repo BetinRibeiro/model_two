@@ -1,0 +1,87 @@
+{{extend 'layout.html'}}
+<marquee>Saber exatamente aonde se enquadra o caução, nos recebimentos ou como pode ser feito isso</marquee>
+<div class="text-center py-4" >
+    <div class="container">
+      <div class="row">
+        <div class="mx-auto col-md-8">
+          <h1 class="mb-3">Ultimos Recebimentos</h1>
+            <p class="lead">{{=imovel.subtipo}} {{=imovel.tipo}}</p>
+            <p class="lead">{{=imovel.lougradouro}} {{=imovel.numero}}, {{=imovel.bairro}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12"><a class="btn btn-primary my-2" href="{{=URL('acs_imoveis','acessar', args=imovel.id)}}">
+            <i class="fa fa-home fa-fw"></i>&nbsp;Acessar Imóvel</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="py-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Vencimento</th>
+                  <th scope="col">Locatario</th>
+                  <th scope="col">Valor</th>
+                  <th scope="col">Recebido</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Acessar</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {{total_recebido=0}}
+                  {{total_aguardando=0}}
+                  {{for row in rows:}}
+                <tr>
+                    {{valor_recebido=row.valor_original}}
+                    {{if (row.finalizado):}}
+                    {{if row.valor_recebido>0:}}
+                    {{row.status="Quitado"}}
+                    {{valor_recebido=row.valor_recebido}}
+                    {{row.status="Quitado"}}
+                    {{row.update_record}}
+                    {{pass}}
+                    {{pass}}
+                  <th scope="row">{{=("{}/{}/{}".format(row.data_vencimento.day,row.data_vencimento.month,row.data_vencimento.year))}}</th>
+                    
+                  <td>{{=row.cliente.razaosocial_nome}}</td>
+                  <td>R$ {{="{:,}".format(round(row.valor_original,1)).replace(",",".")}}0</td>
+                    {{if (row.finalizado)and(row.status=="Quitado"):}}
+                  <td>R$ {{="{:,}".format(round(row.valor_recebido,1)).replace(",",".")}}0</td>
+                    {{else:}}
+                  <td>R$ {{="{:,}".format(round(0,1)).replace(",",".")}}0</td>
+                    {{pass}}
+                  <td>{{=row.status}}</td>
+                  <td id="noprint">
+                      <a class="btn " href="{{=URL('acs_recebimentos','alterar_recibo',args=row.id)}}">
+                          <i class="fa fa-pencil fa-fw fa-1x py-1"></i>
+                      </a>
+                    </td>
+                  <td id="noprint">
+                      <a class="btn disabled" href="{{=URL('acs_recebimentos','recibo',args=row.id)}}">
+                          <i class="fa fa-file-pdf-o fa-fw fa-1x py-1 text-danger"></i>
+                      </a>
+                    </td>
+                </tr>
+                  
+                  {{if row.status=='Aguardando':}}
+                  {{total_aguardando+=row.valor_original}}
+                  {{elif row.status=='Quitado':}}
+                  {{total_recebido+=valor_recebido}}
+                  
+                  {{pass}}
+                  {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

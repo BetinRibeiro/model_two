@@ -1,0 +1,129 @@
+{{extend 'layout.html'}}
+{{import datetime}}
+{{mes_atual=primeira_data.month}}
+{{ano_atual=primeira_data.year}}
+{{mes="Janeiro"}}
+{{if primeira_data.month==2:}}
+{{mes="Fevereiro"}}
+
+{{elif primeira_data.month==3:}}
+{{mes="Março"}}
+
+{{elif primeira_data.month==4:}}
+{{mes="Abril"}}
+
+{{elif primeira_data.month==5:}}
+{{mes="Maio"}}
+
+{{elif primeira_data.month==6:}}
+{{mes="Junho"}}
+
+{{elif primeira_data.month==7:}}
+{{mes="Julho"}}
+
+{{elif primeira_data.month==8:}}
+{{mes="Agosto"}}
+
+{{elif primeira_data.month==9:}}
+{{mes="Setembro"}}
+
+{{elif primeira_data.month==10:}}
+{{mes="Outubro"}}
+
+{{elif primeira_data.month==11:}}
+{{mes="Novembro"}}
+
+{{elif primeira_data.month==12:}}
+{{mes="Dezembro"}}
+{{pass}}
+{{if primeira_data.month==1:}}
+    {{primeira_data=datetime.date(primeira_data.year-1, 12, 1)}}
+{{else:}}
+    {{primeira_data=datetime.date(primeira_data.year,  primeira_data.month-1, 1)}}
+{{pass}}
+{{saldo=0}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<div class="py-3" >
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <center>
+                    <a class="btn btn-link" href="{{=URL('index', args=[primeira_data.month,primeira_data.year])}}" style="color:#3b5998">
+                        <i class="fa fa-fw fa-1x py-1 fa-arrow-left"></i> 
+                        Anterior
+                    </a>
+                    <b>{{=mes}}</b> {{=ano}}
+                    <a class="btn btn-link" href="{{=URL('index',  args=[ultima_data.month,ultima_data.year])}}" style="color:#3b5998">
+                        Próximo
+                        <i class="fa fa-fw fa-1x py-1 fa-arrow-right"></i> 
+                    </a>
+                </center>
+            </div>
+        </div>
+      <div class="row">
+        <div class="col-md-6  pb-2">
+          <ul class="list-group list-group-flush">
+                <li class="border list-group-item d-flex justify-content-between">Recebido<br>
+                    <b>R$ {{="{:,}".format(round(total_recebido,1)).replace(",",".")}}0</b></li>
+                <li class=" border list-group-item d-flex justify-content-between ">Aguardando<br>
+                    <b>R$ {{="{:,}".format(round(total_aguardando,1)).replace(",",".")}}0</b></li>
+                <li class=" border list-group-item d-flex justify-content-between ">Atrasado<br>
+                    <b>R$ {{="{:,}".format(round(total_debito,1)).replace(",",".")}}0</b></li>
+                <li class=" border list-group-item d-flex justify-content-between ">Despesa Imóvel<br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_imoveis,1)).replace(",",".")}}0</b> </li>
+                <li class=" border list-group-item d-flex justify-content-between ">Despesa Empresa<br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_empresa,1)).replace(",",".")}}0</b></li>
+                {{saldo=total_recebido-total_despesa_imoveis-total_despesa_empresa}}
+                <li class=" border list-group-item d-flex justify-content-between text-primary"><b>Saldo</b><br>
+                    <b>R$ {{="{:,}".format(round(total_despesa_empresa,1)).replace(",",".")}}0</b></li>
+            </ul>
+          </div>
+        <div class="col-md-6">
+              <canvas  id="myChart" width="400" height="200"></canvas>
+          </div>
+          </div>
+        </div>
+          <div>
+      </div>
+    </div>
+</div>
+<script>
+    var ctx = document.getElementById('myChart');
+    var dados =  [parseFloat({{=total_recebido}}), parseFloat({{=total_aguardando}}), parseFloat({{=total_debito}}), parseFloat({{=total_despesa_imoveis}}), parseFloat({{=total_despesa_empresa}})];
+    var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Recebido', 'Aguardando', 'Atrasado', 'Desp. Imóvel', 'Desp. Empresa'],
+        datasets: [{
+            label: '# of Votes',
+            data: dados,
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: false
+                }
+            }]
+        }
+    }
+});
+</script>

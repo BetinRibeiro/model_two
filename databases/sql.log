@@ -53,3 +53,293 @@ CREATE TABLE "auth_cas"(
     "renew" CHAR(1)
 );
 success!
+timestamp: 2021-01-27T03:35:43.664826
+CREATE TABLE "empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "proprietario" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "logo" CHAR(512),
+    "razaosocial" CHAR(512),
+    "nomefantasia" CHAR(512),
+    "cnpj" CHAR(512),
+    "inscricaoestarual" CHAR(512),
+    "inscricaomunicipal" CHAR(512),
+    "crt" CHAR(512),
+    "cep" CHAR(512),
+    "lougradouro" CHAR(512),
+    "numero" CHAR(512),
+    "bairro" CHAR(512),
+    "uf" CHAR(512),
+    "cidade" CHAR(512),
+    "complemento" CHAR(512),
+    "email" CHAR(512),
+    "telefone" CHAR(512),
+    "celular" CHAR(512),
+    "q_clientes" INTEGER,
+    "q_imoveis" INTEGER,
+    "q_contratos" INTEGER,
+    "q_parcelas_total" INTEGER,
+    "q_parcelas_pagas" INTEGER,
+    "q_parcelas_atrasadas" INTEGER,
+    "q_parcelas_aguardadas" INTEGER,
+    "valor_total" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_recebido" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_debito" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_aguardando" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_desp_empresa" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_desp_imovel" DOUBLE NOT NULL DEFAULT 0.0,
+    "limite_cliente" INTEGER,
+    "limite_imoveis" INTEGER,
+    "limite_logins" INTEGER,
+    "limite_contratos" INTEGER,
+    "limite_parcelas" INTEGER,
+    "data_desaceleracao" DATE NOT NULL DEFAULT '2021-01-27',
+    "data_bloqueio" DATE NOT NULL DEFAULT '2021-01-27',
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:35:50.681543
+CREATE TABLE "usuario_empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "usuario" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "nome" CHAR(512),
+    "tipo" CHAR(512),
+    "ativo" CHAR(1)
+);
+success!
+timestamp: 2021-01-27T03:35:51.686652
+CREATE TABLE "pessoa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "representante" INTEGER REFERENCES "usuario_empresa" ("id") ON DELETE CASCADE  ,
+    "tipo" CHAR(512),
+    "razaosocial_nome" CHAR(512) NOT NULL,
+    "sexo" CHAR(512) NOT NULL DEFAULT 'M',
+    "estado_civil" CHAR(512) NOT NULL DEFAULT 'Solteiro(a)',
+    "apelido_nome_fantasia" CHAR(512),
+    "cpf" CHAR(512) NOT NULL,
+    "org_espedidor_cpf" CHAR(512) NOT NULL DEFAULT 'SSP',
+    "rg" CHAR(512) NOT NULL,
+    "org_espedidor_rg" CHAR(512) NOT NULL DEFAULT 'SSP',
+    "cep" CHAR(512),
+    "lougradouro" CHAR(512),
+    "numero" CHAR(512),
+    "bairro" CHAR(512),
+    "uf" CHAR(512),
+    "cidade" CHAR(512),
+    "complemento" CHAR(512),
+    "email" CHAR(512),
+    "telefone" CHAR(512),
+    "celular" CHAR(512) NOT NULL DEFAULT '(88)98888-8888',
+    "q_contratos" INTEGER,
+    "q_parcelas_total" INTEGER,
+    "q_parcelas_pagas" INTEGER,
+    "q_parcelas_atrasadas" INTEGER,
+    "q_parcelas_aguardadas" INTEGER,
+    "valor_total" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_recebido" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_debito" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_aguardando" DOUBLE NOT NULL DEFAULT 0.0,
+    "ativo" CHAR(1),
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:35:57.909136
+CREATE TABLE "imovel"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "proprietario" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "tipo" CHAR(512),
+    "subtipo" CHAR(512),
+    "cep" CHAR(512),
+    "lougradouro" CHAR(512),
+    "numero" CHAR(512),
+    "bairro" CHAR(512),
+    "uf" CHAR(512),
+    "cidade" CHAR(512),
+    "complemento" CHAR(512),
+    "status" CHAR(512),
+    "preco" DOUBLE NOT NULL DEFAULT 0.0,
+    "q_contratos" INTEGER,
+    "q_parcelas_total" INTEGER,
+    "q_parcelas_pagas" INTEGER,
+    "q_parcelas_atrasadas" INTEGER,
+    "q_parcelas_aguardadas" INTEGER,
+    "valor_total" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_recebido" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_debito" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_aguardando" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_desp_total" DOUBLE NOT NULL DEFAULT 0.0,
+    "disponivel" CHAR(1),
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:36:02.539578
+CREATE TABLE "despesa_empresa"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "data_ocorrencia" DATE NOT NULL DEFAULT '2021-01-27',
+    "descricao" CHAR(512),
+    "valor" DOUBLE NOT NULL DEFAULT 0.0,
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:38:14.291415
+CREATE TABLE "contrato_aluguel"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "imovel" INTEGER REFERENCES "imovel" ("id") ON DELETE CASCADE  NOT NULL ,
+    "locatario" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  NOT NULL ,
+    "conjuge" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "fiador" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "codigo" CHAR(512),
+    "tipo" CHAR(512) NOT NULL DEFAULT 'Residencial',
+    "virgencia_meses" INTEGER NOT NULL DEFAULT 12,
+    "data_inicial" DATE NOT NULL DEFAULT '2021-01-27',
+    "valor_original" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_reajuste" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_caucao" DOUBLE NOT NULL DEFAULT 0.0,
+    "local_contrato" CHAR(512) NOT NULL DEFAULT 'Juazeiro do Norte - CE',
+    "data_contrato" DATE NOT NULL DEFAULT '2021-01-27',
+    "q_parcelas_total" INTEGER,
+    "q_parcelas_pagas" INTEGER,
+    "q_parcelas_atrasadas" INTEGER,
+    "q_parcelas_aguardadas" INTEGER,
+    "valor_total" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_recebido" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_debito" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_aguardando" DOUBLE NOT NULL DEFAULT 0.0,
+    "data_final" DATE NOT NULL DEFAULT '2021-01-27',
+    "status" CHAR(512),
+    "cod_acesso_externo" CHAR(512),
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:38:18.970884
+CREATE TABLE "recebimento_contrato"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "imovel" INTEGER REFERENCES "imovel" ("id") ON DELETE CASCADE  ,
+    "contrato" INTEGER REFERENCES "contrato_aluguel" ("id") ON DELETE CASCADE  ,
+    "cliente" INTEGER REFERENCES "pessoa" ("id") ON DELETE CASCADE  ,
+    "codigo" CHAR(512),
+    "data_vencimento" DATE NOT NULL DEFAULT '2021-01-27',
+    "data_recebimento" DATE NOT NULL DEFAULT '2021-01-27',
+    "descricao" CHAR(512),
+    "cod_acesso_externo" CHAR(512),
+    "valor_original" DOUBLE NOT NULL DEFAULT 0.0,
+    "valor_recebido" DOUBLE NOT NULL DEFAULT 0.0,
+    "tipo" CHAR(512),
+    "status" CHAR(512),
+    "finalizado" CHAR(1),
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-27T03:38:22.316120
+CREATE TABLE "despesa_imovel"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "empresa" INTEGER REFERENCES "empresa" ("id") ON DELETE CASCADE  ,
+    "imovel" INTEGER REFERENCES "imovel" ("id") ON DELETE CASCADE  ,
+    "data_ocorrencia" DATE NOT NULL DEFAULT '2021-01-27',
+    "descricao" CHAR(512),
+    "valor" DOUBLE NOT NULL DEFAULT 0.0,
+    "conferido" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-28T03:30:46.381999
+CREATE TABLE "cabecalho"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "titulo" CHAR(512),
+    "sub_titulo" CHAR(512),
+    "texto" TEXT,
+    "link" CHAR(512),
+    "titulo_botao" CHAR(512),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-28T03:30:48.740051
+CREATE TABLE "artigo"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "imagem" CHAR(512),
+    "titulo" CHAR(512),
+    "texto" TEXT,
+    "link" CHAR(512),
+    "titulo_botao" CHAR(512),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-28T03:30:50.031169
+CREATE TABLE "desenvolvedor"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "imagem" CHAR(512),
+    "nome" CHAR(512),
+    "funcao" CHAR(512),
+    "frase" CHAR(512),
+    "whatsapp" CHAR(512),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2021-01-28T03:30:51.876311
+CREATE TABLE "caracteristica"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "titulo" CHAR(512),
+    "texto" TEXT,
+    "link" CHAR(512),
+    "ativo" CHAR(1),
+    "is_active" CHAR(1),
+    "created_on" TIMESTAMP,
+    "created_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "modified_on" TIMESTAMP,
+    "modified_by" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
