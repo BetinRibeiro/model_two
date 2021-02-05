@@ -1,5 +1,28 @@
 {{extend 'layout.html'}}
 
+    <meta name="application-name" content="Rogoberto">
+<style>
+    .animate-in-left {
+        transition: all 1.0s ease-out;
+        position:relative;
+        opacity:1;
+        left:0%;
+        &.out-of-viewport {
+            opacity:0;left:-5%;
+        }
+    }
+
+    .animate-in-right {
+        transition: all 1.0s ease-out;
+        position:relative;
+        opacity:1;
+        left:0%;
+        &.out-of-viewport {
+            opacity:0;
+            left:5%;
+        }
+    }
+</style>
 <div class="py-5" >
     <div class="container">
       <div class="row">

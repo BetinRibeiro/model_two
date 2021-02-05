@@ -3,7 +3,9 @@
 def index():
     cab=db.cabecalho(db.cabecalho.id!=0)
     art=db(db.artigo.id<3).select()
-    if auth.user:
+    car=db(db.caracteristica.id<4).select()
+    des=db(db.desenvolvedor.id<5).select()
+    if auth.user
         usuario_empresa = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
         if not usuario_empresa:
             redirect(URL('acs_cadastro','cadastro_basico'))

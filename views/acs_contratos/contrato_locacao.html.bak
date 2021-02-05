@@ -8,8 +8,22 @@
         margin: 3cm 3cm 3cm 2cm;
 }
 </style>
- <a class="btn btn-primary" href="{{=URL('acs_recebimentos','index')}}">Acessar</a>
+ 
 <div class="py-2 imp" >
+    <div class="container">
+        <div class="row border mb-2 " id="noprint">
+            <div class="col-md-6">
+                <a class="btn btn-primary" href="{{=URL('acs_recebimentos','index')}}">
+                    <i class="fa fa-fw fa-list" ></i>
+                    Todos Recebimentos
+                </a>
+                <a class="btn btn-success text-white my-2" onClick="window.print()">
+                    <i class="fa fa-fw fa-print" ></i>
+                    Imprimir Recibo
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="container">
        
       <div class="row">
@@ -24,7 +38,7 @@
         {{else:}}
         <b>CNPJ: {{=contrato.empresa.cnpj}}</b>
         {{pass}}, localizado na {{=contrato.empresa.lougradouro.upper()}}, NÚMERO {{=contrato.empresa.numero.upper()}},
-        {{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}, e como <b>LOCATÁRIO: {{=contrato.locatario.razaosocial_nome}}</b> , inscrito no
+        {{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}{{if "IVL" in str(contrato.empresa.razaosocial):}}, neste ato representada por seu sócio e administrador IARDLEY VIANA LOPES, brasileiro, casado, empresário, portador da CI/RG nº 99029087090 SSP-CE e inscrito no CPF/MF sob nº 893.210.063-20, com endereço à Rua Cícero De Alencar Ribeiro, Número 50, Apto 1800, bairro Lagoa Seca, CEP 63040610, Juazeiro Do Norte – CE{{pass}}, e como <b>LOCATÁRIO: {{=contrato.locatario.razaosocial_nome}}</b> , inscrito no
         {{if contrato.locatario.tipo=='Física':}}
         <b>CPF: {{=contrato.locatario.cpf}} {{=contrato.locatario.org_espedidor_cpf.upper()}}</b>,
         <b>RG: {{=contrato.locatario.rg}} {{=contrato.locatario.org_espedidor_rg.upper()}}</b>
@@ -124,10 +138,6 @@
                 {{pass}}</b> com tolerância de<b> 5 (cinco) dias</b> subseqüente ao vencimento sem multa, após essa data, Após essa data, somente com acréscimo de juros de mora e correção monetária, esta última hipótese se o atraso for superior a<b> 30 (trinta) dias</b>.
             </p>
             <p>
-               <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parágrafo Segundo</b> – Sempre que o pagamento for efetuado por meio de cheque, a dívida somente estará quitada após a efetivacompensação do mesmo.Em caso da não ocorrência de compensação, por qualquer causa ou motivo, implicará automaticamente incidência das cominações para os casos de inadimplência, conforme cláusula quarta, notadamente a multa contratual, os juros moratórios, convencional monetário incidente sobre o valor da obrigação considerada não paga. 
-
-            </p>
-            <p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>QUARTA</b> – Ocorrendo atraso no pagamento do aluguel, após o prazo determinado na cláusula 3ª, será o mesmo acrescido de uma multa de 10% (dez por cento) sobre o valor de prestação locatícia mais juros de mora e correção monetária, independentemente do procedimento que porventura for adotado, a título de honorários administrativos.
             </p>
             <p>
@@ -212,7 +222,7 @@
 
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Não fazendo tal comprovação autoriza o <b>LOCADOR</b> a executar as obras necessárias e reparos, fazendo a cobrança executiva dele <b>LOCATÀRIO</b>. </p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abaixo, assinam também o presente contrato como fiador e principal pagador, solidariamente com o <b>LOCATÁRIO</b> por todas as obrigações neste exaradas, cuja responsabilidade, entretanto, perdurará até a entrega real e efetiva das chaves do imóvel locado, especialmente quanto ao pagamento do aluguel mensal, <b>AO SENHOR(A): {{contrato.fiador.razaosocial_nome.upper()}}, {{if contrato.fiador.tipo=="Física":}} CPF: {{=contrato.fiador.cpf.upper()}},  RG: {{=contrato.fiador.rg}} {{else:}} CNPJ: {{=contrato.fiador.cpf.upper()}} {{pass}}, residente na  {{=contrato.fiador.lougradouro}} , N° {{=contrato.fiador.numero}}, BAIRRO: {{=contrato.fiador.bairro}} , {{=contrato.fiador.cidade}} {{=contrato.fiador.uf}}, {{if len(contrato.fiador.telefone)>10:}}  TELEFONE:  {{=contrato.fiador.telefone}},{{pass}}</b>  FIADOR declara, expressamente que a sua responsabilidade perdurará até a entrega  das chaves, renunciando, à faculdade contida no art. 835 do código civil.As partes contratantes elegem o foro da situação do imóvel, qualquer que seja o seu domicílio. </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abaixo, assinam também o presente contrato como fiador e principal pagador, solidariamente com o <b>LOCATÁRIO</b> por todas as obrigações neste exaradas, cuja responsabilidade, entretanto, perdurará até a entrega real e efetiva das chaves do imóvel locado, especialmente quanto ao pagamento do aluguel mensal, <b>AO SENHOR(A): {{=contrato.fiador.razaosocial_nome.upper()}}, {{if contrato.fiador.tipo=="Física":}} CPF: {{=contrato.fiador.cpf.upper()}},  RG: {{=contrato.fiador.rg}} {{else:}} CNPJ: {{=contrato.fiador.cpf.upper()}} {{pass}}{{if (contrato.fiador.lougradouro)>5:}}, residente na  {{=contrato.fiador.lougradouro}} , N° {{=contrato.fiador.numero}}, BAIRRO: {{=contrato.fiador.bairro}} , {{=contrato.fiador.cidade}} {{=contrato.fiador.uf}}{{pass}}, {{if len(contrato.fiador.telefone)>10:}}  TELEFONE:  {{=contrato.fiador.telefone}},{{pass}}</b>  FIADOR declara, expressamente que a sua responsabilidade perdurará até a entrega  das chaves, renunciando, à faculdade contida no art. 835 do código civil.As partes contratantes elegem o foro da situação do imóvel, qualquer que seja o seu domicílio. </p>
 {{pass}}
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E por estarem justos e contratados, assinam o presente instrumento em 02 (duas vias) de igual teor, na presença de testemunhas que igualmente abaixo assinam: </p>
             <br>

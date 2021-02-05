@@ -23,7 +23,7 @@
           <a class="btn btn-block btn-warning" href="{{=URL('acs_imoveis','disponiveis')}}">Acessar</a>
         </div>
         <div class="col-lg-3 col-6 p-4 border">
-          <i class="d-block fa fa-3x mb-2 text-muted fa-circle"></i>
+          <i class="d-block fa fa-3x mb-2 text-muted fa-bar-chart"></i>
           <p class="lead">Relatorio Geral </p>
           <a class="btn btn-block btn-warning" href="{{=URL('acs_administrativo','relatorio')}}">Acessar</a>
         </div>

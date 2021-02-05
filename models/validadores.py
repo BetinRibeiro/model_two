@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #validadores da empresa
 #validador de imagem
-db.empresa.logo.requires = IS_IMAGE(extensions=('jpeg','png','jpg'), maxsize=(300, 300))
+#db.empresa.logo.requires = IS_IMAGE(extensions=('jpeg','png','jpg'), maxsize=(1200, 800))
 #validador de formatação de data
 db.empresa.data_bloqueio.requires = IS_DATE(format=('%d-%m-%Y'))
 db.empresa.data_desaceleracao.requires = IS_DATE(format=('%d-%m-%Y'))

@@ -121,6 +121,7 @@
 'edit profile': 'editar perfil',
 'Edit This App': 'Editar esta aplicação',
 'Email and SMS': 'Email e SMS',
+'Email Invalido!': 'Email Invalido!',
 'Email sent': 'Email sent',
 'Email verification': 'Email verification',
 'Email verified': 'Email verified',

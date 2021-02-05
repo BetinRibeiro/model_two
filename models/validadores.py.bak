@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #validadores da empresa
 #validador de imagem
-db.empresa.logo.requires = IS_IMAGE(extensions=('jpeg','png','jpg'), maxsize=(300, 300))
+db.empresa.logo.requires = IS_IMAGE(extensions=('jpeg','png','jpg'), maxsize=(1200, 800))
 #validador de formatação de data
 db.empresa.data_bloqueio.requires = IS_DATE(format=('%d-%m-%Y'))
 db.empresa.data_desaceleracao.requires = IS_DATE(format=('%d-%m-%Y'))
@@ -65,7 +65,7 @@ db.contrato_aluguel.status.requires=IS_IN_SET(['Ativo', 'Finalizado', 'Concelado
 db.recebimento_contrato.data_vencimento.requires = IS_DATE(format=('%d-%m-%Y'))
 db.recebimento_contrato.data_recebimento.requires = IS_DATE(format=('%d-%m-%Y'))
 db.recebimento_contrato.tipo.requires = IS_IN_SET(['Dinheiro','Cheque','Boleto','Cartão','Trensferência','Pix'])
-db.recebimento_contrato.status.requires = IS_IN_SET(['Aguardando','Quitado','Cancelado'])
+db.recebimento_contrato.status.requires = IS_IN_SET(['Aguardando','Quitado','Atrasado','Cancelado'])
 
 ###validadores de despesas
 #validadores das despesas da empresa e imovel
