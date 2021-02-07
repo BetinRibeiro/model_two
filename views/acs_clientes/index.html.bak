@@ -85,21 +85,21 @@
                 {{value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))}}
                 {{digit = ((value * 10) % 11) % 10}}
                 {{if digit != cpf[i]:}}
-                  {{aviso=False}}
+                  {{aviso=True}}
                       {{else:}}
                 
                   {{aviso=True}}
                     {{pass}} {{pass}}
               {{if aviso:}}
                 <h3>
-                    CPF CORRETO
+                    <a href="{{=URL('acs_clientes','atualizar_status_imoveis', args=row.id)}}" class="btn btn-primary">Acessar</a>
                 </h3>
                 {{else:}}
                 <h3 class="text-danger">
-                    CPF ERRADO
+                    <a href="{{=URL('acs_clientes','alterar', args=row.id)}}" class="btn btn-danger">CPF ERRADO</a>
                 </h3>
                 {{pass}}
-                <a href="{{=URL('acs_clientes','atualizar_status_imoveis', args=row.id)}}" class="btn btn-primary">Acessar</a>
+                
             </div>
           </div>
         </div>

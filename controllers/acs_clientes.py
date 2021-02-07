@@ -94,6 +94,8 @@ def cadastrar():
     db.pessoa.empresa.default=usuario.empresa
     db.pessoa.empresa.writable=False
     db.pessoa.empresa.readable=False
+    db.pessoa.sexo.writable=False
+    db.pessoa.sexo.readable=False
     db.pessoa.tipo.notnull=True
     db.pessoa.cpf.notnull=True
     db.pessoa.org_espedidor_cpf.notnull=True

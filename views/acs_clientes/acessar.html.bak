@@ -5,13 +5,18 @@
                 {{value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))}}
                 {{digit = ((value * 10) % 11) % 10}}
                 {{if digit != cpf[i]:}}
-                  {{aviso=False}}
+                    {{if len(cpf)==14:}}
+                  {{aviso=True}}
+{{else:}}
+
+                  {{aviso=True}}
+{{pass}}
                       {{else:}}
                 
                   {{aviso=True}}
                     {{pass}} {{pass}}
               {{if aviso==False:}}
-{{redirect(URL('index',args=[1,"cliente.cpf"]))}}
+{{redirect(URL('index',args=[1,cliente.cpf]))}}
 {{pass}}
 <div class="py-5" >
     <div class="container">

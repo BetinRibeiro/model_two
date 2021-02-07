@@ -112,6 +112,7 @@ def cadastrar():
 
 @auth.requires_login()
 def acessar():
+    usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
     imovel = db.imovel(request.args(0, cast=int))
     total_contratos = db(db.contrato_aluguel.imovel==imovel.id).count()
     if total_contratos>0:
@@ -134,10 +135,15 @@ def alterar():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
     if usuario.empresa!=imovel.empresa:
         redirect(URL('default','index'))
-    form = SQLFORM(db.imovel, request.args(0, cast=int), deletable=False)
+    quant_contrato=db(db.recebimento_contrato.imovel==imovel.id).count()
+    deletar=False
+    if quant_contrato==0:
+        deletar=True
+        
+    form = SQLFORM(db.imovel, request.args(0, cast=int), deletable=deletar)
     if form.process().accepted:
         session.flash = 'Dados atualizados'
-        redirect(URL('acessar',args=imovel.id))
+        redirect(URL('acessar',args=imovel.id.form.vars))
     elif form.errors:
         response.flash = 'Erros no formulário!'
     return dict(form=form)

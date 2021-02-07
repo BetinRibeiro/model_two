@@ -5,7 +5,12 @@
                 {{value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))}}
                 {{digit = ((value * 10) % 11) % 10}}
                 {{if digit != cpf[i]:}}
+                    {{if len(cpf)==14:}}
+                  {{aviso=True}}
+{{else:}}
+
                   {{aviso=False}}
+{{pass}}
                       {{else:}}
                 
                   {{aviso=True}}

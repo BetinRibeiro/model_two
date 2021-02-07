@@ -135,7 +135,12 @@ def alterar():
     usuario = db.usuario_empresa(db.usuario_empresa.usuario==auth.user.id)
     if usuario.empresa!=imovel.empresa:
         redirect(URL('default','index'))
-    form = SQLFORM(db.imovel, request.args(0, cast=int), deletable=False)
+    quant_contrato=db(db.recebimento_contrato.imovel==imovel.id).count()
+    deletar=False
+    if quant_contrato==0:
+        deletar=True
+        
+    form = SQLFORM(db.imovel, request.args(0, cast=int), deletable=deletar)
     if form.process().accepted:
         session.flash = 'Dados atualizados'
         redirect(URL('acessar',args=imovel.id))

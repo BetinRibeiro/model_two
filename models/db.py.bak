@@ -247,7 +247,7 @@ db.define_table('imovel',
                 Field('bairro', 'string', default='Centro', label='Bairro',requires = IS_UPPER()),
                 Field('uf', 'string', label='UF', default='CE',requires = IS_UPPER()),
                 Field('cidade', 'string', label='Cidade', default='Juazeiro do Norte',requires = IS_UPPER()),
-                Field('complemento', 'string', label='Complemento'),
+                Field('complemento', 'string', label='Complemento',requires = IS_UPPER()),
                 Field('status', 'string',default='Disponivel', writable=False, readable=False),
                 #dados de valorização do imovel
                 Field('preco', 'double',label="Preço", notnull=True, writable=False, readable=False, default=0),

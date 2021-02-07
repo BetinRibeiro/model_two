@@ -193,7 +193,6 @@ def atualizar_status_imoveis():
     redirect(URL('acessar',args=cliente.id))
     return locals()
 
-urn dict(form=form)
 
 @auth.requires_login()
 def conferir():

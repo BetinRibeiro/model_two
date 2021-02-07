@@ -8,7 +8,14 @@
         margin: 3cm 3cm 3cm 2cm;
 }
 </style>
- 
+{{telefone=contrato.empresa.telefone}}
+{{celular=contrato.empresa.celular}}
+{{telefone=(telefone).replace("(", "").replace(")", "").replace("-", "")}}
+{{telefone="("+(telefone)[0:2]+")"+(telefone)[2:6]+"-"+(telefone)[6:11]}}
+{{celular=(celular).replace("(", "").replace(")", "").replace("-", "")}}
+{{celular="("+(celular)[0:2]+")"+(celular)[2:7]+"-"+(celular)[7:11]}}
+{{contrato.empresa.telefone=telefone}}
+{{contrato.empresa.celular=celular}}
 <div class="py-2 imp" >
     <div class="container">
         <div class="row border mb-2 " id="noprint">
@@ -19,7 +26,7 @@
                 </a>
                 <a class="btn btn-success text-white my-2" onClick="window.print()">
                     <i class="fa fa-fw fa-print" ></i>
-                    Imprimir Recibo
+                    Imprimir Contrato
                 </a>
             </div>
         </div>
@@ -30,7 +37,19 @@
           
         <div class="col-md-12"  align="justify" style="font-family: Roboto" >
 <center><h1>CONTRATO DE LOCAÇÃO</h1></center>
-<br>
+<br>{{contrato.empresa.cnpj=contrato.empresa.cnpj.replace(".","").replace("-","").replace("/","")}}
+                {{if len(contrato.empresa.cnpj)>11:}}
+                {{contrato.empresa.cnpj=""+(contrato.empresa.cnpj)[0:2]+"."+(contrato.empresa.cnpj)[2:5]+"."+(contrato.empresa.cnpj)[5:8]+"/"+(contrato.empresa.cnpj)[8:12]+"-"+(contrato.empresa.cnpj)[12:14]}}
+                {{else:}}
+                {{contrato.empresa.cnpj=""+(contrato.empresa.cnpj)[0:3]+"."+(contrato.empresa.cnpj)[3:6]+"."+(contrato.empresa.cnpj)[6:9]+"-"+(contrato.empresa.cnpj)[9:11]}}
+            {{pass}}
+            
+            {{contrato.locatario.cpf=contrato.locatario.cpf.replace(".","").replace("-","").replace("/","")}}
+                {{if len(contrato.locatario.cpf)>11:}}
+                {{contrato.locatario.cpf=""+(contrato.locatario.cpf)[0:2]+"."+(contrato.locatario.cpf)[2:5]+"."+(contrato.locatario.cpf)[5:8]+"/"+(contrato.locatario.cpf)[8:12]+"-"+(contrato.locatario.cpf)[12:14]}}
+                {{else:}}
+                {{contrato.locatario.cpf=""+(contrato.locatario.cpf)[0:3]+"."+(contrato.locatario.cpf)[3:6]+"."+(contrato.locatario.cpf)[6:9]+"-"+(contrato.locatario.cpf)[9:11]}}
+            {{pass}}
     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pelo presente instrumento particular, que entre si fazem, de um lado, como o
         <b>LOCADOR: {{=contrato.empresa.razaosocial.upper()}}</b>, inscrito no 
         {{if not len(contrato.empresa.cnpj)>13:}}
@@ -99,8 +118,10 @@
 <b id="teste">
     
                 </b>
-               <script>Extenso({{=contrato.valor_original}})</script></b>, que deverá ser pago <u>  por boletos bancários, estes serão encaminhados por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b> </u>, ou deverá ser pago na <u>{{=contrato.empresa.lougradouro.upper()}}, NÚMERO {{=contrato.empresa.numero.upper()}},{{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}, ou por transferência bancária com dados bancarios informado pelo <b>LOCADOR</b> por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b></u>, na forma estabelecida no parágrafo primeiro, na forma estabelecida no parágrafo primeiro.</p>
-            
+               <script>Extenso({{=contrato.valor_original}})</script></b>, que deverá ser pago <u>  por boletos bancários, estes serão encaminhados por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b> </u>, na <u>{{=contrato.empresa.lougradouro.upper()}}, NÚMERO {{=contrato.empresa.numero.upper()}},{{if len(contrato.empresa.complemento)>2:}} {{=contrato.empresa.complemento.upper()}},  {{pass}} BAIRRO {{=contrato.empresa.bairro.upper()}}, NA CIDADE DE {{=contrato.empresa.cidade.upper()}} {{=contrato.empresa.uf}}, ou por transferência bancária com dados bancarios informado pelo <b>LOCADOR</b> por meio eletrônico ao endereço fornecido pelo <b>LOCATARIO</b></u>, na forma estabelecida no parágrafo primeiro, na forma estabelecida no parágrafo primeiro.</p>
+           {{if "IVL" in str(contrato.empresa.razaosocial):}} <p>
+                <b>BANCO BRADESCO, AG 0692-0, C/C 13730-8, IARDLEY VIANA LOPES OU CAIXA ECONÔMICA FEDERAL, AG 0032, OPERAÇÃO 001, CONTA CORRENTE 28269-0, IARDLEY VIANA LOPES.</b>
+            </p>{{pass}}
             <p>
                 <b>Parágrafo Primeiro</b> – Os aluguéis deverão ser pagos no local indicado na cláusula anterior até o dia <b>
                 {{if contrato.data_contrato.day==1:}}01 (UM)
@@ -214,6 +235,21 @@
 </p>
             
 {{if contrato.fiador!=None:}}
+            {{contrato.fiador.cpf=contrato.fiador.cpf.replace(".","").replace("-","").replace("/","")}}
+                {{if len(contrato.fiador.cpf)>11:}}
+                {{contrato.fiador.cpf=""+(contrato.fiador.cpf)[0:2]+"."+(contrato.fiador.cpf)[2:5]+"."+(contrato.fiador.cpf)[5:8]+"/"+(contrato.fiador.cpf)[8:12]+"-"+(contrato.fiador.cpf)[12:14]}}
+                {{else:}}
+                {{contrato.fiador.cpf=""+(contrato.fiador.cpf)[0:3]+"."+(contrato.fiador.cpf)[3:6]+"."+(contrato.fiador.cpf)[6:9]+"-"+(contrato.fiador.cpf)[9:11]}}
+            {{pass}}
+            
+{{telefone=contrato.fiador.telefone}}
+{{celular=contrato.fiador.celular}}
+{{telefone=(telefone).replace("(", "").replace(")", "").replace("-", "")}}
+{{telefone="("+(telefone)[0:2]+")"+(telefone)[2:6]+"-"+(telefone)[6:11]}}
+{{celular=(celular).replace("(", "").replace(")", "").replace("-", "")}}
+{{celular="("+(celular)[0:2]+")"+(celular)[2:7]+"-"+(celular)[7:11]}}
+{{contrato.fiador.telefone=telefone}}
+{{contrato.fiador.celular=celular}}
 	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA-SEXTA </b>– – Face à disposição do artigo 22, VII combinado com o art. 25 da Lei 8.245/91, e para prevenir a responsabilidade dela decorrente, o  <b>LOCATÀRIO</b>.  autoriza expressamente o <b>LOCADOR</b> a cobrar, juntamente com o aluguel mensal, o valor do Imposto Predial e Territorial Urbano – IPTU do imóvel locado dividido em duodécimos. </p>
 
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>VIGÉSIMA– SÉTIMA  </b>– Finda, extinta ou rescindida a locação por qualquer motivo, obriga-se o <b>LOCATÁRIO</b> a devolver as chaves do imóvel, perfeitamente pintado, limpo e encerado, completo de chaves, ferragens, vidros, louças sanitárias, instalações hidráulicas e elétricas, sem despesas para o <b>LOCADOR</b>, nos escritórios da Administradora ou aonde vier a ser  designado pelo <b>LOCADOR</b>. Nessa oportunidade, será o imóvel vistoriado por pessoa de confiança do <b>LOCADOR</b> ou da Administradora a fim de confirmar se o imóvel se encontra nas condições exigidas, ficando o <b>LOCATÁRIO</b> obrigado a pagar as indenizações pelos danos que forem verificados pó culpa direta ou indireta ou ainda, pelo simples desgaste do uso. </p>
@@ -259,6 +295,14 @@
     <p><b>FONE: {{=contrato.empresa.telefone.upper()}}</b></p>
     <p><b>FONE: {{=contrato.empresa.celular.upper()}}</b></p>
 <br><br><br>
+            {{telefone=contrato.locatario.telefone}}
+{{celular=contrato.locatario.celular}}
+{{telefone=(telefone).replace("(", "").replace(")", "").replace("-", "")}}
+{{telefone="("+(telefone)[0:2]+")"+(telefone)[2:6]+"-"+(telefone)[6:11]}}
+{{celular=(celular).replace("(", "").replace(")", "").replace("-", "")}}
+{{celular="("+(celular)[0:2]+")"+(celular)[2:7]+"-"+(celular)[7:11]}}
+{{contrato.locatario.telefone=telefone}}
+{{contrato.locatario.celular=celular}}
             <p>
                 ____________________________________________________
             </p>
